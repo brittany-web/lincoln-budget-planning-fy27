@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Lincoln Place · Media Budget FY26/27 · Sunny Advertising</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--y:#FDB600;--bk:#000;--gr:#595959;--bg:#f5f5f0;--bd:#e2e0d8;--w:#fff;--lw:205px;--mw:78px;--tw:86px}
+body{font-family:'Poppins',sans-serif;background:var(--bg);font-size:11px;color:var(--bk);min-height:100vh}
+/* HEADER */
+.hdr{background:#000;border-bottom:3px solid var(--y);position:sticky;top:0;z-index:100}
+.hdi{padding:8px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:51px}
+.logo{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.sun{width:30px;height:30px;background:var(--y);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.ltx{color:#fff;font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;line-height:1.1}
+.ltg{color:var(--y);font-size:8px;font-weight:500;letter-spacing:3px;text-transform:uppercase}
+.hdr-r{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+#ss{font-size:10px;color:#888;font-weight:500;white-space:nowrap}
+#ss.ok{color:#4caf50}#ss.er{color:#f44}#ss.wn{color:var(--y)}
+.btn{padding:5px 12px;font-family:'Poppins',sans-serif;font-size:9px;font-weight:700;border:1.5px solid;cursor:pointer;border-radius:2px;text-transform:uppercase;letter-spacing:.5px;transition:all .15s}
+.by{background:var(--y);border-color:var(--y);color:#000}.by:hover{background:#e6a800}
+.bo{background:transparent;border-color:#555;color:#fff}.bo:hover{border-color:#fff}
+/* TABS */
+.tabs{background:#111;border-bottom:2px solid var(--y);overflow-x:auto;white-space:nowrap;position:sticky;top:51px;z-index:90}
+.tab{display:inline-block;padding:8px 14px;font-size:9px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:#777;cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;transition:all .15s;user-select:none}
+.tab:hover{color:#fff}.tab.on{color:#000;border-bottom-color:var(--y);background:var(--y)}
+.tab.ttab{color:var(--y)}.tab.ttab.on{color:#000}
+/* CONFIG */
+.cfg{background:#fffbf0;border:2px solid var(--y);border-radius:4px;padding:16px 20px;margin:14px 18px;display:none}
+.cfg.show{display:block}
+.cfg h3{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
+.cfg p,.cfg label{font-size:10px;color:var(--gr);margin-bottom:6px;line-height:1.6;display:block}
+.cfg label{font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-top:8px}
+.cfg input[type=url]{width:100%;max-width:640px;border:1px solid var(--bd);border-radius:2px;padding:7px 10px;font-family:'Poppins',sans-serif;font-size:11px;outline:none;display:block;margin:4px 0 8px}
+.cfg input[type=url]:focus{border-color:var(--y)}
+.cfr{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.code{background:#1a1a1a;color:#aef;border-radius:3px;padding:12px 14px;font-size:9px;font-family:monospace;white-space:pre;overflow-x:auto;margin:8px 0;line-height:1.6}
+.fhint{background:#f0f8ff;border:1px solid #90caf9;border-radius:3px;padding:7px 12px;font-size:10px;color:#1a3c8a;margin:8px 0;line-height:1.7}
+.fhint code{background:#e3efff;padding:1px 4px;border-radius:2px;font-size:9px}
+/* MAIN */
+.main{padding:14px 18px}
+.sec{display:none}.sec.on{display:block}
+.ntc{background:#fff8e0;border:1px solid var(--y);border-radius:3px;padding:7px 12px;font-size:10px;color:#664;margin-bottom:10px}
+/* TABLE */
+.tw{overflow-x:auto;border:1px solid var(--bd);border-radius:4px;background:var(--w);max-height:calc(100vh - 155px)}
+table.sp{border-collapse:collapse;font-size:10px;table-layout:fixed}
+table.sp td,table.sp th{border:1px solid var(--bd);padding:0;height:26px;overflow:hidden;white-space:nowrap}
+.sth{position:sticky;top:0;z-index:20;background:#000;color:var(--y);font-size:9px;font-weight:700;text-transform:uppercase;text-align:center;letter-spacing:.5px;padding:0 4px}
+.lc{position:sticky;left:0;z-index:10;width:var(--lw);min-width:var(--lw);max-width:var(--lw)}
+.lc.sth{z-index:30;text-align:left;padding-left:8px}
+.mc{width:var(--mw);min-width:var(--mw)}.tc{width:var(--tw);min-width:var(--tw)}
+/* ROW COLOURS */
+.r-ev td,.r-ev .lc{background:#fffef5}
+.r-ld td,.r-ld .lc{background:#f0f8ff;font-weight:600}
+.r-tc td{background:#000!important;color:var(--y)!important;font-weight:700}.r-tc .lc{background:#000!important;color:var(--y)!important}
+.r-ac td,.r-ac .lc{background:#fff8f0}
+.r-ch td,.r-ch .lc{background:var(--w)}.r-ch:hover td,.r-ch:hover .lc{background:#fffbf0}
+.r-ctg td{background:#1a1a1a!important;color:var(--y)!important;font-weight:700}.r-ctg .lc{background:#1a1a1a!important;color:var(--y)!important}
+.r-cs td{background:#fff0c8!important;color:#5a3e00!important;font-weight:600;font-style:italic}.r-cs .lc{background:#fff0c8!important;color:#5a3e00!important}
+.r-tm td{background:#000!important;color:var(--y)!important;font-weight:700}.r-tm .lc{background:#000!important;color:var(--y)!important}
+.r-xg td{background:#111!important;color:#999!important}.r-xg .lc{background:#111!important;color:#999!important}
+.r-as td,.r-as .lc{background:#fffef5}
+.r-rm td,.r-rm .lc{background:#e8f5e9;font-weight:600}
+.r-rl td,.r-rl .lc{background:#e8f0fe;font-weight:600}
+.bm{background:#e8f4e8!important}.bl{background:#fff8e0!important}.bg{background:#ffe8e8!important;font-weight:700!important}
+.sth.bm{background:#1a4d1a!important}.sth.bl{background:#4d3d00!important}.sth.bg{background:#4d0000!important}
+.sub{background:#333!important;color:var(--y)!important;font-weight:700!important;font-size:9px!important;text-align:center!important;padding:0 4px!important}
+/* INPUTS */
+.ci{width:100%;height:100%;border:none;background:transparent;font-family:'Poppins',sans-serif;font-size:10px;text-align:right;padding:0 5px;outline:none;color:inherit;font-weight:inherit}
+.ci:focus{background:rgba(253,182,0,.12)}
+.ci.ev{text-align:left;font-size:9px}
+/* CALC DISPLAY */
+.cv{display:flex;align-items:center;justify-content:flex-end;height:26px;padding:0 5px;font-size:10px}
+.cv.lv{justify-content:flex-start;padding-left:8px}
+.neg{color:#c00!important}
+/* EVENTS TOOLTIP */
+.ev-td{position:relative;overflow:visible!important}
+.ev-td:hover::after{content:attr(data-tip);position:absolute;top:calc(100% + 2px);left:0;background:#000;color:#fff;padding:6px 10px;border-radius:3px;border:1px solid var(--y);font-size:10px;font-family:'Poppins',sans-serif;white-space:normal;word-break:break-word;max-width:400px;min-width:180px;z-index:500;pointer-events:none;box-shadow:0 4px 14px rgba(0,0,0,.5);line-height:1.5}
+.ev-td:hover::before{content:'';position:absolute;top:100%;left:12px;border:5px solid transparent;border-bottom-color:var(--y);z-index:501;pointer-events:none}
+/* FORMULA */
+.fml-err{color:#f44!important}
+/* TOTAL ESTATE ROW */
+.r-est td{background:#1a1a1a!important;color:var(--y)!important;font-size:9px;font-weight:600}.r-est .lc{background:#1a1a1a!important;color:var(--y)!important}
+/* SPINNER */
+@keyframes spin{to{transform:rotate(360deg)}}
+.spn{display:inline-block;width:10px;height:10px;border:1.5px solid #555;border-top-color:var(--y);border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:3px}
+footer{background:#000;border-top:3px solid var(--y);padding:10px 18px;margin-top:20px}
+footer p{color:#555;font-size:9px;text-transform:uppercase;letter-spacing:.8px}
+footer strong{color:var(--y)}
+/* ── UX / VISUAL IMPROVEMENTS ── */
+table.sp td,table.sp th{height:28px}
+/* Tabs: stacked layout for name + sub-label */
+.tab{display:inline-flex;flex-direction:column;align-items:center;justify-content:center;gap:0;line-height:1.1}
+.tab-sub{font-size:8px;font-weight:600;letter-spacing:.2px;color:rgba(255,255,255,.45);text-transform:none;margin-top:2px;line-height:1}
+.tab.on .tab-sub{color:rgba(0,0,0,.5)}
+.tab.ttab .tab-sub{color:rgba(253,182,0,.65)}
+.tab.ttab.on .tab-sub{color:rgba(0,0,0,.5)}
+/* TBC community tabs — dimmed until data arrives */
+.tbc-tab{opacity:.4}
+.tbc-tab:hover{opacity:.7}
+.tbc-tab.on{opacity:1}
+.tbc-tab .tab-sub{color:var(--y)!important;opacity:.8}
+/* Row group separators */
+.r-sep td{height:4px!important;background:#cac7bc!important;border-top:none!important;border-bottom:none!important;padding:0!important}
+.r-sep .lc{background:#cac7bc!important}
+/* Formula cell indicator */
+.ci.has-fml{border-left:2.5px solid var(--y)!important;background:rgba(253,182,0,.04)!important}
+/* Stronger focus / edit state */
+.ci:focus{background:rgba(253,182,0,.16)!important;box-shadow:inset 0 0 0 1.5px rgba(253,182,0,.55)!important}
+/* Over-allocated channel warning */
+.r-cs.over-alloc td{background:#fff0f0!important;color:#c00!important;font-style:italic}
+.r-cs.over-alloc .lc{background:#fff0f0!important;color:#c00!important}
+/* SUMMARY CARDS */
+.sum-cards{display:flex;gap:10px;margin:0 0 12px;flex-wrap:wrap}
+.sum-card{background:#111;border:1.5px solid #222;border-radius:4px;padding:11px 18px;min-width:130px;flex:1}
+.sum-card .sc-val{font-size:20px;font-weight:700;color:var(--y);letter-spacing:-.5px;line-height:1}
+.sum-card .sc-lbl{font-size:8px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:#555;margin-top:5px}
+.sum-card.sc-hi{border-color:var(--y)}
+.sum-card.sc-tbc .sc-val{color:#444;font-size:14px}
+</style>
+</head>
+<body>
+<header class="hdr">
+<div class="hdi">
+  <div class="logo">
+    <div class="sun">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5" stroke-linecap="round">
+        <circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/>
+        <line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/>
+        <line x1="4.22" y1="4.22" x2="6.34" y2="6.34"/><line x1="17.66" y1="17.66" x2="19.78" y2="19.78"/>
+        <line x1="4.22" y1="19.78" x2="6.34" y2="17.66"/><line x1="17.66" y1="6.34" x2="19.78" y2="4.22"/>
+      </svg>
+    </div>
+    <div><div class="ltx">Sunny Advertising</div><div class="ltg">Lincoln Place &middot; Media Budget FY26/27</div></div>
+  </div>
+  <div class="hdr-r">
+    <span id="ss" class="wn">&#9889; Setup required</span>
+    <button class="btn by" style="font-size:9px;padding:4px 10px" onclick="manualSave()">&#8679; Save</button>
+    <button class="btn bo" style="font-size:9px;padding:4px 10px" onclick="toggleCfg()">&#9881; Setup</button>
+  </div>
+</div>
+</header>
+<div class="tabs" id="tabBar"></div>
+<div class="cfg" id="cfgPanel">
+  <h3>&#9881; Google Sheets Connection</h3>
+  <p>Connect to your Google Sheet so all edits persist across sessions. One-time setup.</p>
+  <label>Step 1 &mdash; Go to <a href="https://script.google.com" target="_blank" style="color:var(--y)">script.google.com</a>, new project, paste:</label>
+  <div class="code">const SHEET_ID = '1v7EnwJXVgjOmOshz-nL5o6f5Y6t-GaLTFt5x4gsfoVM';
+const TAB = 'Claude Storage';
+function getSheet() {
+  const ss = SpreadsheetApp.openById(SHEET_ID);
+  return ss.getSheetByName(TAB) || ss.insertSheet(TAB);
+}
+function doGet(e) {
+  const val = getSheet().getRange('A1').getValue() || '{}';
+  const cb = e && e.parameter && e.parameter.cb;
+  if (cb) return ContentService.createTextOutput(cb+'('+val+');').setMimeType(ContentService.MimeType.JAVASCRIPT);
+  return ContentService.createTextOutput(val).setMimeType(ContentService.MimeType.JSON);
+}
+function doPost(e) {
+  getSheet().getRange('A1').setValue(e.postData.contents);
+  return ContentService.createTextOutput('{"ok":true}').setMimeType(ContentService.MimeType.JSON);
+}</div>
+  <label>Step 2 &mdash; Deploy &rarr; Web app &rarr; Execute as: <strong>Me</strong> &rarr; Who has access: <strong>Anyone</strong> &rarr; Deploy &rarr; Copy URL</label>
+  <label>Step 3 &mdash; Paste URL:</label>
+  <input type="url" id="cfgUrl" placeholder="https://script.google.com/macros/s/YOUR_ID/exec">
+  <div class="fhint">&#9889; <strong>Formula support</strong> &mdash; start any numeric cell with <code>=</code><br>
+  Examples: <code>=1000*5%</code> &nbsp; <code>=50000/12</code> &nbsp; <code>=tv+radio</code> &nbsp; <code>=total_media*0.1</code> &nbsp; <code>=meta_google*1.1</code><br>
+  Named refs: <em>tv, bvod, radio, press, prog_dooh, ooh, rea_media, transit, letterbox, meta_google, meta_statewide, youtube, display_native, retargeting, total_media, media_ex_gst, leads, rea_listing, actual_cpl</em></div>
+  <div class="cfr">
+    <button class="btn by" onclick="saveCfg()">Save &amp; Connect</button>
+    <button class="btn bo" onclick="loadData()">Load from Sheets</button>
+    <button class="btn bo" onclick="toggleCfg()">Close</button>
+  </div>
+</div>
+<div class="main" id="wrap"></div>
+<footer><p>Prepared by <strong>Sunny Advertising</strong> &middot; YOUR MEDIA PERFORMANCE PARTNERS &middot; SunnyAdvertising.com.au &middot; L1, 9 Maud St, Maroochydore QLD 4558 &middot; Confidential &mdash; Lincoln Place FY 2026/27</p></footer>
+<script>
+const MONTHS    = ["JULY", "AUG", "SEP", "OCT", "NOV", "DEC", "JAN", "FEB", "MAR", "APR", "MAY", "JUNE"];
+const CHANNELS  = ["tv", "bvod", "radio", "press", "prog_dooh", "ooh", "rea_media", "transit", "letterbox", "meta_google", "meta_statewide", "youtube", "display_native", "retargeting"];
+const CH_LBL    = {"tv": "TV", "bvod": "BVOD", "radio": "RADIO", "press": "PRESS", "prog_dooh": "PROG DOOH", "ooh": "OOH", "rea_media": "REA", "transit": "TRANSIT", "letterbox": "LETTERBOX", "meta_google": "META + GOOGLE + MICRO", "meta_statewide": "META STATEWIDE", "youtube": "YOUTUBE", "display_native": "DISPLAY/NATIVE", "retargeting": "DIGITAL RETARGETING"};
+const COMM_DEF  = [{"id": "HUNTLY", "name": "Huntly", "state": "VIC", "region": "Huntly / Bendigo", "events": ["Open Day \u2013 Display CH U/C", "Online video series", "Spring Campaign", "Spring Campaign + Oktoberfest + Grandparent's Day", "Family Influencer Xmas Convo + Info Session + Stage 2 Launch", "Family Influencer Xmas Convo", "Family Influencer Xmas Convo + New Display Home", "Settle & Save", "Settle & Save + Workshop Launch?", "Downsizing Webinar", "Downsizing Webinar", "Clubhouse HHT"], "leads": [47, 30, 34, 44, 34, 20, 30, 34, 34, 34, 25, 25], "rea_listing": [1500, 1500, 1500, 1500, 1500, 1500, 1500, 1500, 1500, 1500, 1500, 1500], "total_media": [32941, 21000, 23529, 30882, 23529, 14000, 19500, 21849, 21849, 21849, 16049, 16049]}, {"id": "KFLAT", "name": "Kangaroo Flat", "state": "VIC", "region": "Kangaroo Flat / Bendigo", "events": ["Brand pillars \u2013 Homes for sale", "Brand pillars from $430k + Online video series + Stage 9 Civil Completion", "Spring Campaign", "Spring Campaign + Open Day", "Family Influencer Xmas Convo + Wellness Centre Sod Turn", "Family Influencer Xmas Convo", "Family Influencer Xmas Convo + Display Home Launch + Family Open Day", "Settle & Save", "Settle & Save", "Info Session / Live Webinar", "Downsizing Webinar", "Downsizing Webinar + Wellness Centre Launch"], "leads": [37, 37, 37, 37, 37, 25, 33, 33, 33, 33, 33, 33], "rea_listing": [2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000], "total_media": [24074, 24074, 24074, 24074, 24074, 16250, 21667, 21667, 21667, 21667, 21667, 21667]}, {"id": "BARANDUDA", "name": "Baranduda", "state": "VIC", "region": "Baranduda / Albury-Wodonga", "events": ["Complete Stage 2 + OFI", "Information Session + Stage 3 Civils complete + OFI", "Spring Campaign + OFI", "Spring Campaign + Oktoberfest + Grandparent's Day + OFI", "Family Influencer Xmas Convo + OFI", "Family Influencer Xmas Convo + OFI", "Family Influencer Xmas Convo + Family Open Day + OFI", "Settle & Save + OFI", "Settle & Save + OFI", "Webinar: Downsizing + OFI", "Webinar: Downsizing + OFI", "OFI"], "leads": [40, 40, 40, 40, 40, 10, 10, 30, 40, 40, 40, 40], "rea_listing": [2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000], "total_media": [17778, 17778, 17778, 17778, 17778, 4444, 4444, 13333, 17778, 17778, 17778, 17778]}, {"id": "NR", "name": "Northern Rivers", "state": "NSW", "region": "Gulmarrad / Northern Rivers NSW", "events": ["OFI", "OFI", "Spring Campaign + Hard Hat Tour + OFI", "Spring Campaign + OFI", "Family Influencer Xmas Convo + Clubhouse Launch + Clubhouse Opening + OFI", "Family Influencer Xmas Convo + Clubhouse Opening + OFI", "Family Influencer Xmas Convo + Open Day + OFI", "Settle & Save + OFI", "OFI", "Webinar: Downsizing + OFI", "Downsizing Replay + OFI", "OFI"], "leads": [30, 30, 45, 44, 44, 58, 58, 58, 58, 58, 58, 58], "rea_listing": [2500, 2500, 2500, 2500, 2500, 2500, 2500, 2500, 2500, 2500, 2500, 2500], "total_media": [12101, 12101, 18151, 21916, 17532, 23377, 23377, 23377, 29221, 23377, 23377, 23377]}, {"id": "MUDGEE", "name": "Mudgee", "state": "NSW", "region": "Mudgee / Central West NSW", "events": ["Stage 2 homes start construction", "Clubhouse Hard Hat", "Spring Campaign", "Spring Campaign + Display Homes complete + Display Home opening", "Family Influencer Xmas Convo", "Family Influencer Xmas Convo", "Family Influencer Xmas Convo + CH Resident soft launch + First stage 2 homes PC", "Settle & Save + CH Public event", "Settle & Save", "Webinar: Downsizing", "Downsizing Replay", ""], "leads": [44, 44, 39, 26, 26, 20, 35, 30, 30, 26, 25, 25], "rea_listing": [1500, 1500, 1500, 1500, 1500, 1500, 1500, 1500, 1500, 1500, 1500, 1500], "total_media": [31544, 31544, 28039, 21307, 18693, 14300, 25025, 21450, 24450, 18693, 17875, 17875]}, {"id": "GRIFFITH", "name": "Griffith", "state": "NSW", "region": "Griffith / Riverina", "events": ["OFI Food & Wine Fest", "OFI Food & Wine Fest", "Spring Campaign + OFI", "Spring Campaign + Open Day + OFI", "Family Influencer Xmas Convo + OFI", "Family Influencer Xmas Convo + OFI", "OFI", "Campaign Retail + OFI", "OFI", "Clubhouse complete + Downsizing Webinar + OFI", "Clubhouse Open Event + OFI", "OFI"], "leads": [25, 25, 35, 35, 35, 30, 30, 40, 45, 35, 50, 35], "rea_listing": [2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000], "total_media": [15000, 15000, 21000, 21000, 21000, 18000, 18000, 24000, 27000, 21000, 30000, 21000]}, {"id": "LLEP", "name": "Eagle Point", "state": "VIC", "region": "Eagle Point / Gippsland", "events": ["", "", "", "", "", "", "", "", "", "", "", ""], "leads": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "rea_listing": [2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000], "total_media": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]}, {"id": "NB", "name": "Northern Beaches", "state": "NSW", "region": "Northern Beaches / NSW", "events": ["", "", "", "", "", "", "", "", "", "", "", ""], "leads": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "rea_listing": [2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000], "total_media": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]}, {"id": "TAMWORTH", "name": "Tamworth", "state": "NSW", "region": "Tamworth / NW NSW", "events": ["", "", "", "", "", "", "", "", "", "", "", ""], "leads": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "rea_listing": [2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000], "total_media": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]}, {"id": "MOAMA", "name": "Moama", "state": "VIC", "region": "Moama / Echuca", "events": ["", "", "", "", "", "", "", "", "", "", "", ""], "leads": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "rea_listing": [2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000], "total_media": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]}, {"id": "WANG", "name": "Wangaratta", "state": "VIC", "region": "Wangaratta / NE VIC", "events": ["", "", "", "", "", "", "", "", "", "", "", ""], "leads": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "rea_listing": [2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000], "total_media": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]}];
+const TID       = '_TOTAL';
+
+let S = {}, GSURL = localStorage.getItem('sgs')||'', tid=null, cur=COMM_DEF[0].id;
+
+// ── INIT ───────────────────────────────────────────────────────────
+function initS() {
+  COMM_DEF.forEach(c => {
+    S[c.id] = {
+      events:      c.events.map(String),
+      leads:       c.leads.map(String),
+      actual_spend:Array(12).fill(''),
+      actual_cpl:  Array(12).fill(''),
+      rea_listing: c.rea_listing.map(String),
+      total_media: c.total_media.map(v => v ? String(Math.round(v/1.1)) : '')
+    };
+    CHANNELS.forEach(ch => { S[c.id][ch] = Array(12).fill(''); });
+  });
+}
+
+// ── MATH ───────────────────────────────────────────────────────────
+function n(v) { return parseFloat(String(v||'0').replace(/[$,\s]/g,''))||0; }
+function fmt(v) {
+  if(v===''||v===null||v===undefined) return '';
+  const x=Math.round(parseFloat(v));
+  return (isNaN(x)||x===0)?'':'$'+x.toLocaleString();
+}
+function fmtN(v){ const x=parseInt(v)||0; return x?x.toLocaleString():''; }
+function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+// ── CALC HELPERS ────────────────────────────────────────────────────
+// tm = TOTAL MEDIA (editable budget), chSum = channel allocation sum
+function tm(id,m)    { return n(S[id].total_media[m]); }
+function chSum(id,m) { return CHANNELS.reduce((s,ch)=>s+n(S[id][ch][m]),0); }
+function tmA(id)     { return S[id].total_media.reduce((s,v)=>s+n(v),0); }
+function lstA(id)    { return S[id].rea_listing.reduce((s,v)=>s+n(v),0); }
+function grand(id)   { return tmA(id)+lstA(id); }
+function leadsA(id)  { return S[id].leads.reduce((s,v)=>s+n(v),0); }
+function tcpl(id,m)  {
+  const ld=n(S[id].leads[m]); if(!ld) return '';
+  const ex=tm(id,m); if(!ex) return ''; return ex/ld;
+}
+function tcplA(id)   { const ld=leadsA(id),g=grand(id); return (ld&&g)?g/ld:''; }
+function rem(id,m)   { return tm(id,m) - chSum(id,m); }
+function acpl(id,m)  { return n(S[id].actual_cpl[m])||''; }
+function acplA(id)   {
+  let ld=0,cost=0;
+  for(let m=0;m<12;m++){const c=n(S[id].actual_cpl[m]),l=n(S[id].leads[m]);if(c&&l){cost+=c*l;ld+=l;}}
+  return ld?cost/ld:'';
+}
+
+// ── FORMULA EVAL ────────────────────────────────────────────────────
+function evalFml(expr,cid,mi) {
+  expr = expr.trim().replace(/^=/,'');
+  expr = expr.replace(/(\d+\.?\d*)%/g,'($1/100)');
+  const refs = {
+    total_media:n(S[cid].total_media[mi]), media_ex_gst:tm(cid,mi),
+    leads:n(S[cid].leads[mi]), rea_listing:n(S[cid].rea_listing[mi]),
+    actual_spend:n(S[cid].actual_spend[mi])
+  };
+  CHANNELS.forEach(ch=>{ refs[ch]=n(S[cid][ch][mi]); });
+  Object.keys(refs).sort((a,b)=>b.length-a.length).forEach(k=>{
+    expr=expr.replace(new RegExp('\\b'+k+'\\b','gi'),String(refs[k]));
+  });
+  if(!/^[\d\s+\-*/(). ]+$/.test(expr)) return null;
+  try { const r=Function('"use strict";return ('+expr+')')(); return isFinite(r)?Math.round(r):null; }
+  catch(e) { return null; }
+}
+
+// ── BUILD TABLE ─────────────────────────────────────────────────────
+function buildTable(c) {
+  const id=c.id;
+  let hdr=`<th class="lc sth">${c.name} (${c.state})</th>`;
+  MONTHS.forEach(m=>{ hdr+=`<th class="mc sth">${m}</th>`; });
+  hdr+=`<th class="tc sth">TOTAL</th><th class="tc sth bm">MEDIA</th><th class="tc sth bl">LISTING</th><th class="tc sth bg">TOTAL</th>`;
+
+  function inp(row,mi,isEv) {
+    const v=esc(S[id][row][mi]||'');
+    return isEv
+      ? `<td class="mc ev-td" data-tip="${v}"><input class="ci ev" data-id="${id}" data-r="${row}" data-m="${mi}" value="${v}"></td>`
+      : `<td class="mc"><input class="ci" data-id="${id}" data-r="${row}" data-m="${mi}" value="${v}"></td>`;
+  }
+  function cc(eid,val,cls) { return `<td class="${cls||'tc'}"><div class="cv" id="${eid}">${val}</div></td>`; }
+  function lbl(txt) { return `<td class="lc"><div class="cv lv">${txt}</div></td>`; }
+  const blk3='<td class="tc"></td><td class="tc"></td><td class="tc"></td>';
+  const SEP='<tr class="r-sep"><td colspan="17"></td></tr>';
+  let rows='';
+
+  // Events
+  let r=lbl('Events/Milestones');
+  MONTHS.forEach((_,m)=>{ r+=inp('events',m,true); });
+  rows+=`<tr class="r-ev">${r}<td class="tc"></td>${blk3}</tr>`;
+
+  // Leads
+  r=lbl('Lead Targets');
+  MONTHS.forEach((_,m)=>{ r+=inp('leads',m,false); });
+  rows+=`<tr class="r-ld">${r}${cc(id+'_ld_t',fmtN(leadsA(id)))}<td class="tc"></td><td class="tc"></td><td class="tc"></td></tr>`;
+
+  // Target CPL
+  r=lbl('TARGET CPL');
+  MONTHS.forEach((_,m)=>{ r+=cc(id+'_tc_'+m,fmt(tcpl(id,m))); });
+  rows+=`<tr class="r-tc">${r}${cc(id+'_tc_t',fmt(tcplA(id)))}<td class="tc"></td><td class="tc"></td><td class="tc"></td></tr>`;
+
+  // Actual CPL (editable — enter directly)
+  r=lbl('ACTUAL CPL');
+  MONTHS.forEach((_,m)=>{ r+=inp('actual_cpl',m,false); });
+  rows+=`<tr class="r-ac">${r}${cc(id+'_ac_t',fmt(acplA(id)))}<td class="tc"></td><td class="tc"></td><td class="tc"></td></tr>`;
+  rows+=SEP;
+
+  // Channel rows
+  CHANNELS.forEach(ch=>{
+    r=lbl(CH_LBL[ch]);
+    MONTHS.forEach((_,m)=>{ r+=inp(ch,m,false); });
+    const chT=S[id][ch].reduce((s,v)=>s+n(v),0);
+    r+=cc(id+'_'+ch+'_t',fmt(chT))+blk3;
+    rows+=`<tr class="r-ch">${r}</tr>`;
+  });
+  rows+=SEP;
+
+  // Media Ex GST (editable — values entered ex-GST)
+  const tma=tmA(id),la=lstA(id),ga=grand(id);
+  r=lbl('MEDIA EX GST');
+  MONTHS.forEach((_,m)=>{ r+=inp('total_media',m,false); });
+  r+=cc(id+'_xg_t',fmt(tma))+cc(id+'_xg_m',fmt(tma),'tc bm')+cc(id+'_xg_l',fmt(la),'tc bl')+cc(id+'_xg_g',fmt(ga),'tc bg');
+  rows+=`<tr class="r-tm">${r}</tr>`;
+
+  // Channel Allocated (below Media Ex GST)
+  r=lbl('CHANNEL ALLOCATED');
+  MONTHS.forEach((_,m)=>{ r+=cc(id+'_cs_'+m,fmt(chSum(id,m))); });
+  const csT=Array.from({length:12},(_,m)=>chSum(id,m)).reduce((s,v)=>s+v,0);
+  r+=cc(id+'_cs_t',fmt(csT))+blk3;
+  rows+=`<tr class="r-cs">${r}</tr>`;
+  rows+=SEP;
+
+  // Contingency / Remaining = Media Ex GST − Channel Allocated
+  r=lbl('CONTINGENCY / REMAINING');
+  MONTHS.forEach((_,m)=>{
+    const rv=rem(id,m);
+    r+=`<td class="tc"><div class="cv${rv<0?' neg':''}" id="${id}_rm_${m}">${fmt(rv)}</div></td>`;
+  });
+  const remT=Array.from({length:12},(_,m)=>rem(id,m)).reduce((s,v)=>s+v,0);
+  r+=cc(id+'_rm_t',fmt(remT))+blk3;
+  rows+=`<tr class="r-rm">${r}</tr>`;
+  rows+=SEP;
+
+  // REA PP
+  r=lbl('REA PP');
+  MONTHS.forEach((_,m)=>{ r+=inp('rea_listing',m,false); });
+  rows+=`<tr class="r-rl">${r}${cc(id+'_rl_t',fmt(la))}<td class="tc"></td><td class="tc"></td><td class="tc"></td></tr>`;
+
+  return `<div class="tw"><table class="sp"><thead><tr>${hdr}</tr></thead><tbody>${rows}</tbody></table></div>`;
+}
+
+// ── TOTAL TAB ────────────────────────────────────────────────────────
+function buildTotalTable() {
+  const id=TID;
+  let hdr=`<th class="lc sth">ALL ESTATES COMBINED</th>`;
+  MONTHS.forEach(m=>{ hdr+=`<th class="mc sth">${m}</th>`; });
+  hdr+=`<th class="tc sth">TOTAL</th><th class="tc sth bm">MEDIA</th><th class="tc sth bl">LISTING</th><th class="tc sth bg">TOTAL</th>`;
+
+  function cc(eid,val,cls) { return `<td class="${cls||'tc'}"><div class="cv" id="${eid}">${val}</div></td>`; }
+  function lbl(txt) { return `<td class="lc"><div class="cv lv">${txt}</div></td>`; }
+  const blk3='<td class="tc"></td><td class="tc"></td><td class="tc"></td>';
+  const SEP='<tr class="r-sep"><td colspan="17"></td></tr>';
+
+  function sumR(row,m) { return COMM_DEF.reduce((s,c)=>s+n(S[c.id][row][m]),0); }
+  function sumTM(m)    { return COMM_DEF.reduce((s,c)=>s+tm(c.id,m),0); }
+  function sumTMA()    { let t=0;for(let m=0;m<12;m++)t+=sumTM(m);return t; }
+  function sumLst()    { return COMM_DEF.reduce((s,c)=>s+lstA(c.id),0); }
+  function sumLeads()  { return COMM_DEF.reduce((s,c)=>s+leadsA(c.id),0); }
+  function sumSpend()  { return COMM_DEF.reduce((s,c)=>s+spendA(c.id),0); }
+  function sumCS(m)    { return COMM_DEF.reduce((s,c)=>s+chSum(c.id,m),0); }
+
+  let rows='';
+
+  // Leads
+  let r=lbl('Lead Targets');
+  MONTHS.forEach((_,m)=>{ r+=cc(id+'_ld_'+m,fmtN(sumR('leads',m))); });
+  rows+=`<tr class="r-ld">${r}${cc(id+'_ld_t',fmtN(sumLeads()))}<td class="tc"></td><td class="tc"></td><td class="tc"></td></tr>`;
+
+  // Target CPL
+  r=lbl('TARGET CPL');
+  MONTHS.forEach((_,m)=>{
+    const lm=sumR('leads',m),ex=sumTM(m);
+    r+=cc(id+'_tc_'+m,lm&&ex?fmt(ex/lm):'');
+  });
+  const tmaA=sumTMA(),laA=sumLst(),gaA=tmaA+laA,ldA=sumLeads();
+  rows+=`<tr class="r-tc">${r}${cc(id+'_tc_t',ldA&&gaA?fmt(gaA/ldA):'')}<td class="tc"></td><td class="tc"></td><td class="tc"></td></tr>`;
+  rows+=SEP;
+
+  // Channels
+  CHANNELS.forEach(ch=>{
+    r=lbl(CH_LBL[ch]);
+    MONTHS.forEach((_,m)=>{ r+=cc(id+'_'+ch+'_'+m,fmt(sumR(ch,m))); });
+    const chT=COMM_DEF.reduce((s,c)=>s+S[c.id][ch].reduce((a,v)=>a+n(v),0),0);
+    r+=cc(id+'_'+ch+'_t',fmt(chT))+blk3;
+    rows+=`<tr class="r-ch">${r}</tr>`;
+  });
+  rows+=SEP;
+
+  // Media Ex GST
+  r=lbl('MEDIA EX GST');
+  MONTHS.forEach((_,m)=>{ r+=cc(id+'_xg_'+m,fmt(sumTM(m))); });
+  r+=cc(id+'_xg_t',fmt(tmaA))+cc(id+'_xg_m',fmt(tmaA),'tc bm')+cc(id+'_xg_l',fmt(laA),'tc bl')+cc(id+'_xg_g',fmt(gaA),'tc bg');
+  rows+=`<tr class="r-tm">${r}</tr>`;
+
+  // Channel Allocated (below Media Ex GST)
+  r=lbl('CHANNEL ALLOCATED');
+  MONTHS.forEach((_,m)=>{ r+=cc(id+'_cs_'+m,fmt(sumCS(m))); });
+  const csTA=Array.from({length:12},(_,m)=>sumCS(m)).reduce((s,v)=>s+v,0);
+  r+=cc(id+'_cs_t',fmt(csTA))+blk3;
+  rows+=`<tr class="r-cs">${r}</tr>`;
+  rows+=SEP;
+
+  // Contingency / Remaining = Media Ex GST − Channel Allocated
+  r=lbl('CONTINGENCY / REMAINING');
+  MONTHS.forEach((_,m)=>{
+    const rv=sumTM(m)-sumCS(m);
+    r+=`<td class="tc"><div class="cv${rv<0?' neg':''}" id="${id}_rm_${m}">${fmt(rv)}</div></td>`;
+  });
+  const remT=Array.from({length:12},(_,m)=>sumTM(m)-sumCS(m)).reduce((s,v)=>s+v,0);
+  r+=cc(id+'_rm_t',fmt(remT))+blk3;
+  rows+=`<tr class="r-rm">${r}</tr>`;
+  rows+=SEP;
+
+  // REA PP
+  r=lbl('REA PP');
+  MONTHS.forEach((_,m)=>{ r+=cc(id+'_rl_'+m,fmt(sumR('rea_listing',m))); });
+  rows+=`<tr class="r-rl">${r}${cc(id+'_rl_t',fmt(laA))}<td class="tc"></td><td class="tc"></td><td class="tc"></td></tr>`;
+  rows+=SEP;
+
+  // Per-estate breakdown
+  COMM_DEF.forEach(c=>{
+    let er=`<td class="lc"><div class="cv lv">${c.name} (${c.state})</div></td>`;
+    MONTHS.forEach((_,m)=>{ er+=cc('',fmt(tm(c.id,m)),'tc'); });
+    const ct=tmA(c.id),cl=lstA(c.id),cg=grand(c.id);
+    er+=cc('',fmt(ct))+cc('',fmt(ct),'tc bm')+cc('',fmt(cl),'tc bl')+cc('',fmt(cg),'tc bg');
+    rows+=`<tr class="r-est">${er}</tr>`;
+  });
+
+  return `<div class="tw"><table class="sp"><thead><tr>${hdr}</tr></thead><tbody>${rows}</tbody></table></div>`;
+}
+
+// ── SUMMARY CARDS ────────────────────────────────────────────────────
+function buildSummaryCards(c) {
+  const id=c.id;
+  const tma=tmA(id),la=lstA(id),ga=grand(id),ld=leadsA(id);
+  const hasBudget=tma>0;
+  if(!hasBudget) return `<div class="sum-cards">
+    <div class="sum-card sc-tbc"><div class="sc-val">Awaiting brief</div><div class="sc-lbl">Budget not yet received</div></div>
+  </div>`;
+  const cpl=ld&&ga?fmt(ga/ld):'—';
+  return `<div class="sum-cards">
+    <div class="sum-card"><div class="sc-val" id="${id}_sc_media">${fmt(tma)}</div><div class="sc-lbl">Media Ex GST</div></div>
+    <div class="sum-card"><div class="sc-val" id="${id}_sc_listing">${fmt(la)}</div><div class="sc-lbl">REA Listing</div></div>
+    <div class="sum-card sc-hi"><div class="sc-val" id="${id}_sc_grand">${fmt(ga)}</div><div class="sc-lbl">Total Budget</div></div>
+    <div class="sum-card"><div class="sc-val" id="${id}_sc_leads">${fmtN(ld)}</div><div class="sc-lbl">Lead Target</div></div>
+    <div class="sum-card"><div class="sc-val" id="${id}_sc_cpl">${cpl}</div><div class="sc-lbl">Target CPL</div></div>
+  </div>`;
+}
+
+// ── RENDER ALL ───────────────────────────────────────────────────────
+function renderAll() {
+  const tmaAll=COMM_DEF.reduce((s,c)=>s+tmA(c.id),0);
+  let tabs=COMM_DEF.map(c=>{
+    const hasBudget=tmA(c.id)>0;
+    const sub=hasBudget?'$'+Math.round(tmA(c.id)/1000).toLocaleString()+'k':'TBC';
+    return `<div class="tab${c.id===cur?' on':''}${hasBudget?'':' tbc-tab'}" data-id="${c.id}" onclick="swTab('${c.id}')">${c.name} (${c.state})<span class="tab-sub">${sub}</span></div>`;
+  }).join('');
+  tabs+=`<div class="tab ttab${cur===TID?' on':''}" data-id="${TID}" onclick="swTab('${TID}')">&#8721; TOTAL<span class="tab-sub">$${Math.round(tmaAll/1000).toLocaleString()}k</span></div>`;
+  document.getElementById('tabBar').innerHTML=tabs;
+
+  let secs=COMM_DEF.map(c=>{
+    const hasBudget=tmA(c.id)>0;
+    const notice=hasBudget
+      ? `&#9432;&ensp;<strong>${c.name} &middot; ${c.state} &middot; ${c.region}</strong> &mdash; Enter ex-GST figures in the <strong>MEDIA EX GST</strong> row. Fill channel rows to allocate. CHANNEL ALLOCATED shows split progress. Type <strong>=</strong> for formulas.`
+      : `&#9888;&ensp;<strong>${c.name} &middot; ${c.state} &middot; ${c.region}</strong> &mdash; Budget not yet received. Enter monthly ex-GST figures in the <strong>MEDIA EX GST</strong> row to activate this community.`;
+    return `<div class="sec${c.id===cur?' on':''}" id="s_${c.id}">
+    ${buildSummaryCards(c)}
+    <div class="ntc">${notice}</div>
+    ${buildTable(c)}</div>`;
+  }).join('');
+  secs+=`<div class="sec${cur===TID?' on':''}" id="s_${TID}">
+    <div class="ntc">&#8721;&ensp;<strong>All Estates Combined</strong> &mdash; Read-only. Live sum of all community budgets, spend and leads. Per-estate TOTAL MEDIA breakdown shown at bottom.</div>
+    ${buildTotalTable()}</div>`;
+  document.getElementById('wrap').innerHTML=secs;
+}
+
+// ── UPDATE CALCS ─────────────────────────────────────────────────────
+function updCalcs(id) {
+  for(let m=0;m<12;m++) {
+    sv(id+'_cs_'+m, fmt(chSum(id,m)));
+    sv(id+'_xg_'+m, fmt(tm(id,m)));
+    sv(id+'_tc_'+m, fmt(tcpl(id,m)));
+    const re=document.getElementById(id+'_rm_'+m);
+    if(re){re.textContent=fmt(rem(id,m));re.className='cv'+(rem(id,m)<0?' neg':'');}
+  }
+  CHANNELS.forEach(ch=>{ sv(id+'_'+ch+'_t',fmt(S[id][ch].reduce((s,v)=>s+n(v),0))); });
+  sv(id+'_cs_t',fmt(Array.from({length:12},(_,m)=>chSum(id,m)).reduce((s,v)=>s+v,0)));
+  const tma=tmA(id),la=lstA(id),ga=grand(id),ld=leadsA(id);
+  const remT=Array.from({length:12},(_,m)=>rem(id,m)).reduce((s,v)=>s+v,0);
+  sv(id+'_xg_t',fmt(tma));sv(id+'_xg_m',fmt(tma));sv(id+'_xg_l',fmt(la));sv(id+'_xg_g',fmt(ga));
+  sv(id+'_tc_t',fmt(tcplA(id)));sv(id+'_ld_t',fmtN(ld));
+  sv(id+'_ac_t',fmt(acplA(id)));
+  sv(id+'_rm_t',fmt(remT));sv(id+'_rl_t',fmt(la));
+  sv(id+'_sc_media',fmt(tma));sv(id+'_sc_listing',fmt(la));sv(id+'_sc_grand',fmt(ga));
+  sv(id+'_sc_leads',fmtN(ld));sv(id+'_sc_cpl',ld&&ga?fmt(ga/ld):'—');
+  updTotalTab();
+}
+
+function updTotalTab() {
+  const id=TID;
+  function sumR(row,m) { return COMM_DEF.reduce((s,c)=>s+n(S[c.id][row][m]),0); }
+  function sumTM(m)    { return COMM_DEF.reduce((s,c)=>s+tm(c.id,m),0); }
+  function sumCS(m)    { return COMM_DEF.reduce((s,c)=>s+chSum(c.id,m),0); }
+  const tmaA=Array.from({length:12},(_,m)=>sumTM(m)).reduce((s,v)=>s+v,0);
+  const laA=COMM_DEF.reduce((s,c)=>s+lstA(c.id),0);
+  const gaA=tmaA+laA, ldA=COMM_DEF.reduce((s,c)=>s+leadsA(c.id),0);
+  for(let m=0;m<12;m++) {
+    sv(id+'_ld_'+m,fmtN(sumR('leads',m)));
+    const lm=sumR('leads',m),ex=sumTM(m);
+    sv(id+'_tc_'+m,lm&&ex?fmt(ex/lm):'');
+    sv(id+'_xg_'+m,fmt(sumTM(m)));
+    sv(id+'_cs_'+m,fmt(sumCS(m)));
+    sv(id+'_rl_'+m,fmt(sumR('rea_listing',m)));
+    const rv=sumTM(m)-sumCS(m);
+    const re=document.getElementById(id+'_rm_'+m);
+    if(re){re.textContent=fmt(rv);re.className='cv'+(rv<0?' neg':'');}
+    CHANNELS.forEach(ch=>{sv(id+'_'+ch+'_'+m,fmt(sumR(ch,m)));});
+  }
+  CHANNELS.forEach(ch=>{ sv(id+'_'+ch+'_t',fmt(COMM_DEF.reduce((s,c)=>s+S[c.id][ch].reduce((a,v)=>a+n(v),0),0))); });
+  const csTA=Array.from({length:12},(_,m)=>sumCS(m)).reduce((s,v)=>s+v,0);
+  sv(id+'_cs_t',fmt(csTA));
+  sv(id+'_ld_t',fmtN(ldA));sv(id+'_tc_t',ldA&&gaA?fmt(gaA/ldA):'');
+  sv(id+'_xg_t',fmt(tmaA));sv(id+'_xg_m',fmt(tmaA));sv(id+'_xg_l',fmt(laA));sv(id+'_xg_g',fmt(gaA));
+  sv(id+'_rl_t',fmt(laA));
+  sv(id+'_rm_t',fmt(Array.from({length:12},(_,m)=>sumTM(m)-sumCS(m)).reduce((s,v)=>s+v,0)));
+}
+
+function sv(eid,val){ const e=document.getElementById(eid);if(e)e.textContent=val; }
+
+// ── TAB SWITCH ───────────────────────────────────────────────────────
+function swTab(id) {
+  cur=id;
+  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('on',t.dataset.id===id));
+  document.querySelectorAll('.sec').forEach(s=>s.classList.toggle('on',s.id==='s_'+id));
+  if(id===TID)updTotalTab();
+}
+
+// ── INPUT HANDLER ────────────────────────────────────────────────────
+document.addEventListener('input',function(e) {
+  const t=e.target;if(!t.dataset||!t.dataset.id)return;
+  const {id,r,m}=t.dataset;const mi=parseInt(m);
+  S[id][r][mi]=t.value;
+  if(r==='events'){ const td=t.closest('td.ev-td');if(td)td.setAttribute('data-tip',t.value); }
+  updCalcs(id);schedSave();
+});
+
+// ── FORMULA ON BLUR ──────────────────────────────────────────────────
+const fmlStore={};
+document.addEventListener('blur',function(e) {
+  const t=e.target;if(!t.dataset||!t.dataset.id)return;
+  const {id,r,m}=t.dataset;const mi=parseInt(m);
+  if(r==='events'||r==='leads')return;
+  const val=t.value.trim();const k=id+'_'+r+'_'+m;
+  if(val.startsWith('=')) {
+    fmlStore[k]=val;
+    const res=evalFml(val,id,mi);
+    if(res!==null){t.value=res;t.classList.remove('fml-err');t.classList.add('has-fml');S[id][r][mi]=String(res);updCalcs(id);schedSave();}
+    else t.classList.add('fml-err');
+  } else { delete fmlStore[k]; t.classList.remove('fml-err');t.classList.remove('has-fml'); }
+},true);
+document.addEventListener('focus',function(e) {
+  const t=e.target;if(!t.dataset||!t.dataset.id||!t.dataset.r)return;
+  const k=t.dataset.id+'_'+t.dataset.r+'_'+t.dataset.m;
+  if(fmlStore[k])t.value=fmlStore[k];
+},true);
+
+// ── PERSISTENCE ──────────────────────────────────────────────────────
+function setSS(cls,msg){const e=document.getElementById('ss');e.className=cls;e.innerHTML=msg;}
+function schedSave(){setSS('wn','&#9679; Unsaved');if(tid)clearTimeout(tid);tid=setTimeout(doSave,2500);}
+function manualSave(){if(tid)clearTimeout(tid);doSave();}
+async function doSave(){
+  if(!GSURL){setSS('wn','&#9889; Configure Google Sheets URL');return;}
+  setSS('wn','<span class="spn"></span>Saving…');
+  try{await fetch(GSURL,{method:'POST',mode:'no-cors',body:JSON.stringify(S)});setSS('ok','&#10003; Saved '+new Date().toLocaleTimeString());}
+  catch(e){setSS('er','&#10007; Save failed');}
+}
+function loadData(){
+  if(!GSURL){setSS('wn','&#9889; No URL set');return;}
+  setSS('wn','<span class="spn"></span>Loading…');
+  const cb='_scb'+Date.now();const sc=document.createElement('script');
+  window[cb]=function(data){
+    try{
+      delete window[cb];if(sc.parentNode)sc.parentNode.removeChild(sc);
+      if(data&&typeof data==='object'&&Object.keys(data).length>0){
+        COMM_DEF.forEach(c=>{if(data[c.id])Object.keys(data[c.id]).forEach(k=>{if(S[c.id]&&Array.isArray(data[c.id][k]))S[c.id][k]=data[c.id][k];});});
+        document.querySelectorAll('input[data-id]').forEach(inp=>{
+          const {id,r,m}=inp.dataset;const v=S[id]?.[r]?.[parseInt(m)];
+          inp.value=(v===null||v===undefined)?'':v;
+          if(r==='events'){const td=inp.closest('td.ev-td');if(td)td.setAttribute('data-tip',inp.value);}
+        });
+        COMM_DEF.forEach(c=>updCalcs(c.id));updTotalTab();
+        setSS('ok','&#10003; Loaded from Sheets');
+      }else setSS('wn','&#9712; No saved data');
+    }catch(err){setSS('er','&#10007; Load error');}
+  };
+  sc.src=GSURL+'?cb='+cb;sc.onerror=()=>{setSS('er','&#10007; Load failed');};
+  document.head.appendChild(sc);
+}
+function toggleCfg(){const p=document.getElementById('cfgPanel');p.classList.toggle('show');if(p.classList.contains('show'))document.getElementById('cfgUrl').value=GSURL;}
+function saveCfg(){
+  const u=document.getElementById('cfgUrl').value.trim();
+  if(!u){alert('Please enter your Apps Script URL');return;}
+  GSURL=u;localStorage.setItem('sgs',u);setSS('ok','&#10003; Connected');
+  document.getElementById('cfgPanel').classList.remove('show');loadData();
+}
+
+// ── BOOT ─────────────────────────────────────────────────────────────
+initS();renderAll();
+if(GSURL){document.getElementById('cfgUrl').value=GSURL;loadData();}
+else setSS('wn','&#9889; Click &#9881; Setup to connect Google Sheets');
+</script>
+</body>
+</html>
