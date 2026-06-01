@@ -194,7 +194,7 @@ function initS() {
       leads:       c.leads.map(String),
       actual_spend:Array(12).fill(''),
       actual_cpl:  Array(12).fill(''),
-      rea_listing: c.rea_listing.map(String),
+      rea_listing: c.rea_listing.map(v => v ? String(Math.round(v/1.1)) : ''),
       total_media: c.total_media.map(v => v ? String(Math.round(v/1.1)) : '')
     };
     CHANNELS.forEach(ch => { S[c.id][ch] = Array(12).fill(''); });
