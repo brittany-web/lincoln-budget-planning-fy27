@@ -112,6 +112,24 @@ table.sp td,table.sp th{height:28px}
 /* Over-allocated channel warning */
 .r-cs.over-alloc td{background:#fff0f0!important;color:#c00!important;font-style:italic}
 .r-cs.over-alloc .lc{background:#fff0f0!important;color:#c00!important}
+/* CHAT */
+.chat-btn{position:fixed;bottom:22px;right:22px;background:var(--y);border:none;border-radius:50%;width:52px;height:52px;cursor:pointer;font-size:20px;display:flex;align-items:center;justify-content:center;z-index:300;box-shadow:0 4px 16px rgba(0,0,0,.5);transition:transform .15s;color:#000;font-weight:700}
+.chat-btn:hover{transform:scale(1.08)}
+.chat-panel{position:fixed;bottom:84px;right:22px;width:390px;max-height:62vh;background:#111;border:1.5px solid #2a2a2a;border-radius:8px;z-index:300;display:none;flex-direction:column;box-shadow:0 8px 40px rgba(0,0,0,.7)}
+.chat-panel.open{display:flex}
+.chat-hdr{background:#000;border-bottom:2px solid var(--y);padding:10px 14px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--y);border-radius:6px 6px 0 0;display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
+.chat-hdr span.cx{cursor:pointer;color:#444;font-size:16px;line-height:1;font-weight:400}.chat-hdr span.cx:hover{color:#fff}
+.chat-msgs{flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:8px;min-height:100px}
+.chat-msg{font-size:10px;line-height:1.6;padding:8px 10px;border-radius:4px;max-width:92%}
+.chat-msg.user{background:#1c1c1c;color:#ccc;align-self:flex-end;border:1px solid #2a2a2a}
+.chat-msg.ai{background:#0d0d00;border:1px solid #2a2a00;color:#bbb;align-self:flex-start}
+.chat-msg.ai strong{color:var(--y)}
+.chat-msg.err{background:#1a0000;border:1px solid #500;color:#f88;align-self:flex-start}
+.chat-foot{display:flex;gap:6px;padding:10px;border-top:1px solid #1a1a1a;flex-shrink:0}
+.chat-foot textarea{flex:1;background:#000;border:1px solid #2a2a2a;border-radius:3px;color:#fff;font-family:'Poppins',sans-serif;font-size:10px;padding:7px 9px;resize:none;height:52px;outline:none;line-height:1.5}
+.chat-foot textarea:focus{border-color:var(--y)}
+.chat-foot button{background:var(--y);border:none;border-radius:3px;color:#000;font-family:'Poppins',sans-serif;font-size:9px;font-weight:700;padding:0 14px;cursor:pointer;text-transform:uppercase;letter-spacing:.5px;transition:opacity .15s}
+.chat-foot button:disabled{opacity:.35;cursor:default}
 /* SUMMARY CARDS */
 .sum-cards{display:flex;gap:10px;margin:0 0 12px;flex-wrap:wrap}
 .sum-card{background:#111;border:1.5px solid #222;border-radius:4px;padding:11px 18px;min-width:130px;flex:1}
@@ -176,6 +194,20 @@ function doPost(e) {
   </div>
 </div>
 <div class="main" id="wrap"></div>
+<button class="chat-btn" onclick="toggleChat()" title="AI Budget Assistant">✦</button>
+<div class="chat-panel" id="chatPanel">
+  <div class="chat-hdr">
+    <span>✦ AI Budget Assistant</span>
+    <span class="cx" onclick="toggleChat()">✕</span>
+  </div>
+  <div class="chat-msgs" id="chatMsgs">
+    <div class="chat-msg ai"><strong>Ready.</strong> Ask me to make bulk changes — e.g. <em>"Put 5% of each community's Media Ex GST into Meta Statewide every month"</em> or <em>"Set TV to $8,000 for Huntly in Oct and Nov"</em> or <em>"Spread $50,000 across Meta Google for Northern Rivers equally"</em></div>
+  </div>
+  <div class="chat-foot">
+    <textarea id="chatIn" placeholder="Ask Claude to edit the budget…" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendChat();}"></textarea>
+    <button onclick="sendChat()" id="chatSend">Send</button>
+  </div>
+</div>
 <footer><p>Prepared by <strong>Sunny Advertising</strong> &middot; YOUR MEDIA PERFORMANCE PARTNERS &middot; SunnyAdvertising.com.au &middot; L1, 9 Maud St, Maroochydore QLD 4558 &middot; Confidential &mdash; Lincoln Place FY 2026/27</p></footer>
 <script>
 const MONTHS    = ["JULY", "AUG", "SEP", "OCT", "NOV", "DEC", "JAN", "FEB", "MAR", "APR", "MAY", "JUNE"];
@@ -561,7 +593,11 @@ document.addEventListener('focus',function(e) {
 
 // ── PERSISTENCE ──────────────────────────────────────────────────────
 function setSS(cls,msg){const e=document.getElementById('ss');e.className=cls;e.innerHTML=msg;}
-function schedSave(){setSS('wn','&#9679; Unsaved');if(tid)clearTimeout(tid);tid=setTimeout(doSave,2500);}
+function schedSave(){
+  try{localStorage.setItem('lp_data',JSON.stringify(S));}catch(e){}
+  setSS('ok','&#10003; Saved locally');
+  if(GSURL){setSS('wn','&#9679; Syncing…');if(tid)clearTimeout(tid);tid=setTimeout(doSave,2500);}
+}
 function manualSave(){if(tid)clearTimeout(tid);doSave();}
 async function doSave(){
   if(!GSURL){setSS('wn','&#9889; Configure Google Sheets URL');return;}
@@ -599,10 +635,111 @@ function saveCfg(){
   document.getElementById('cfgPanel').classList.remove('show');loadData();
 }
 
+// ── CHAT ─────────────────────────────────────────────────────────────
+function toggleChat(){document.getElementById('chatPanel').classList.toggle('open');if(document.getElementById('chatPanel').classList.contains('open'))document.getElementById('chatIn').focus();}
+
+function chatMsg(role,html){
+  const el=document.createElement('div');
+  el.className='chat-msg '+role;el.innerHTML=html;
+  const box=document.getElementById('chatMsgs');
+  box.appendChild(el);box.scrollTop=box.scrollHeight;return el;
+}
+
+function buildCtx(){
+  return COMM_DEF.map(c=>({
+    id:c.id,name:c.name,state:c.state,
+    total_media:S[c.id].total_media.map(v=>parseFloat(v)||0),
+    rea_listing:S[c.id].rea_listing.map(v=>parseFloat(v)||0),
+    leads:S[c.id].leads.map(v=>parseFloat(v)||0)
+  }));
+}
+
+const CHAT_SYSTEM=`You are an AI assistant for a media budget planning tool for Lincoln Place retirement communities in Australia. You make bulk edits to budget allocations based on natural language instructions.
+
+COMMUNITIES: ${COMM_DEF.map(c=>`${c.id} (${c.name}, ${c.state})`).join(' | ')}
+
+CHANNEL FIELDS: tv, bvod, radio, press, prog_dooh, ooh, rea_media, transit, letterbox, meta_google, meta_statewide, youtube, display_native, retargeting
+
+OTHER FIELDS: total_media (Media Ex GST budget — do not overwrite unless asked), rea_listing (REA listing fee), actual_cpl, leads
+
+MONTHS: 0=July 1=Aug 2=Sep 3=Oct 4=Nov 5=Dec 6=Jan 7=Feb 8=Mar 9=Apr 10=May 11=June
+
+All values are ex-GST AUD. Round all values to whole numbers. For percentage-based requests, calculate against that community's total_media value for each month. Always call the apply_changes tool — never respond with plain text alone when changes are needed.`;
+
+async function sendChat(){
+  const inp=document.getElementById('chatIn');
+  const msg=inp.value.trim();if(!msg)return;
+  inp.value='';document.getElementById('chatSend').disabled=true;
+  chatMsg('user',esc(msg));
+  const thinking=chatMsg('ai','<span class="spn"></span> Thinking…');
+  try{
+    const resp=await fetch('/api/chat',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-6',
+        max_tokens:4096,
+        system:CHAT_SYSTEM+'\n\nCURRENT BUDGET DATA:\n'+JSON.stringify(buildCtx()),
+        tools:[{
+          name:'apply_changes',
+          description:'Apply budget changes to specific cells in the planning tool',
+          input_schema:{type:'object',required:['changes','summary'],properties:{
+            changes:{type:'array',items:{type:'object',required:['community','field','month','value'],properties:{
+              community:{type:'string',description:'Community ID e.g. HUNTLY'},
+              field:{type:'string',description:'Field name e.g. meta_statewide'},
+              month:{type:'integer',minimum:0,maximum:11,description:'Month index 0=July … 11=June'},
+              value:{type:'number',description:'New ex-GST value in AUD'}
+            }}},
+            summary:{type:'string',description:'Short plain-English summary of what was changed'}
+          }}
+        }],
+        tool_choice:{type:'auto'},
+        messages:[{role:'user',content:msg}]
+      })
+    });
+    const data=await resp.json();
+    thinking.remove();
+    if(data.error){chatMsg('err','API error: '+JSON.stringify(data.error));return;}
+    const tool=data.content&&data.content.find(b=>b.type==='tool_use'&&b.name==='apply_changes');
+    const text=data.content&&data.content.find(b=>b.type==='text');
+    if(tool){
+      const {changes,summary}=tool.input;let n=0;
+      changes.forEach(ch=>{
+        if(S[ch.community]&&S[ch.community][ch.field]!==undefined&&ch.month>=0&&ch.month<12){
+          S[ch.community][ch.field][ch.month]=String(Math.round(ch.value));n++;
+        }
+      });
+      document.querySelectorAll('input[data-id]').forEach(el=>{
+        const v=S[el.dataset.id]?.[el.dataset.r]?.[parseInt(el.dataset.m)];
+        if(v!==undefined)el.value=v;
+      });
+      COMM_DEF.forEach(c=>updCalcs(c.id));updTotalTab();schedSave();
+      chatMsg('ai',`<strong>Done.</strong> ${esc(summary)}<br><span style="color:#555;font-size:9px">${n} cell${n!==1?'s':''} updated</span>`);
+    } else if(text){
+      chatMsg('ai',esc(text.text));
+    } else {
+      chatMsg('err','No response from Claude. Try again.');
+    }
+  }catch(e){
+    thinking.remove();chatMsg('err','Error: '+esc(e.message));
+  }finally{
+    document.getElementById('chatSend').disabled=false;
+    document.getElementById('chatIn').focus();
+  }
+}
+
 // ── BOOT ─────────────────────────────────────────────────────────────
-initS();renderAll();
+initS();
+try{
+  const _ls=localStorage.getItem('lp_data');
+  if(_ls){
+    const _d=JSON.parse(_ls);
+    COMM_DEF.forEach(c=>{if(_d[c.id])Object.keys(_d[c.id]).forEach(k=>{if(S[c.id]&&Array.isArray(_d[c.id][k]))S[c.id][k]=_d[c.id][k];});});
+  }
+}catch(e){}
+renderAll();
 if(GSURL){document.getElementById('cfgUrl').value=GSURL;loadData();}
-else setSS('wn','&#9889; Click &#9881; Setup to connect Google Sheets');
+else setSS('ok','&#10003; Data saved locally');
 </script>
 </body>
 </html>
