@@ -232,6 +232,7 @@ function initS() {
       fy26_leads:  [''],
       fy26_cpl:    [''],
       rea_listing: c.rea_listing.map(v => v ? String(Math.round(v/1.1)) : ''),
+      approved_listing: String(Math.round(c.rea_listing.reduce((s,v)=>s+v,0)/1.1)),
       total_media: c.total_media.map(v => v ? String(Math.round(v/1.1)) : '')
     };
     CHANNELS.forEach(ch => { S[c.id][ch] = Array(12).fill(''); });
@@ -469,13 +470,15 @@ function buildSummaryCards(c) {
   if(!hasBudget) return `<div class="sum-cards">
     <div class="sum-card sc-tbc"><div class="sc-val">Awaiting brief</div><div class="sc-lbl">Budget not yet received</div></div>
   </div>`;
-  const cpl=ld&&ga?fmt(ga/ld):'—';
+  const approvedListing=n(S[id].approved_listing);
+  const approvedGrand=tma+approvedListing;
+  const cpl=ld&&approvedGrand?fmt(approvedGrand/ld):'—';
   const fy26ld=esc(S[id].fy26_leads[0]||'');
   const fy26cpl=esc(S[id].fy26_cpl[0]||'');
   return `<div class="sum-cards">
     <div class="sum-card"><div class="sc-val" id="${id}_sc_media">${fmt(tma)}</div><div class="sc-lbl">Approved Media Budget</div></div>
-    <div class="sum-card"><div class="sc-val" id="${id}_sc_listing">${fmt(la)}</div><div class="sc-lbl">Approved Listing Budget</div></div>
-    <div class="sum-card sc-hi"><div class="sc-val" id="${id}_sc_grand">${fmt(ga)}</div><div class="sc-lbl">Total Approved Budget</div></div>
+    <div class="sum-card"><div class="sc-val">${fmt(approvedListing)}</div><div class="sc-lbl">Approved Listing Budget</div></div>
+    <div class="sum-card sc-hi"><div class="sc-val" id="${id}_sc_grand">${fmt(approvedGrand)}</div><div class="sc-lbl">Total Approved Budget</div></div>
     <div class="sum-card"><div class="sc-val" id="${id}_sc_leads">${fmtN(ld)}</div><div class="sc-lbl">FY27 Lead Target</div></div>
     <div class="sum-card"><div class="sc-val" id="${id}_sc_cpl">${cpl}</div><div class="sc-lbl">FY27 Target CPL</div></div>
     <div class="sum-card"><input class="sc-inp" data-id="${id}" data-r="fy26_leads" data-m="0" value="${fy26ld}" placeholder="—"><div class="sc-lbl">FY26 Lead Target</div></div>
@@ -528,8 +531,9 @@ function updCalcs(id) {
   for(let m=0;m<12;m++) sv(id+'_ac_'+m,fmt(acpl(id,m)));
   sv(id+'_ac_t',fmt(acplA(id)));
   sv(id+'_rm_t',fmt(remT));sv(id+'_rl_t',fmt(la));
-  sv(id+'_sc_media',fmt(tma));sv(id+'_sc_listing',fmt(la));sv(id+'_sc_grand',fmt(ga));
-  sv(id+'_sc_leads',fmtN(ld));sv(id+'_sc_cpl',ld&&ga?fmt(ga/ld):'—');
+  const apl=n(S[id].approved_listing),ag=tma+apl;
+  sv(id+'_sc_media',fmt(tma));sv(id+'_sc_grand',fmt(ag));
+  sv(id+'_sc_leads',fmtN(ld));sv(id+'_sc_cpl',ld&&ag?fmt(ag/ld):'—');
   updTotalTab();
 }
 
