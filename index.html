@@ -258,6 +258,28 @@ const COMMITTED = {
   }
 };
 
+function applyDefaults() {
+  COMM_DEF.forEach(c=>{
+    if(!S[c.id])return;
+    const defMedia=c.total_media.map(v=>v?Math.round(v/1.1):0);
+    const defList=c.rea_listing.map(v=>v?Math.round(v/1.1):0);
+    // Re-seed budget if COMM_DEF has values but saved data is empty
+    if(defMedia.some(v=>v>0)&&!S[c.id].total_media.some(v=>n(v)>0)){
+      S[c.id].total_media=defMedia.map(v=>v?String(v):'');
+      S[c.id].rea_listing=defList.map(v=>v?String(v):'');
+      S[c.id].approved_listing=String(defList.reduce((s,v)=>s+v,0));
+    }
+    // Re-seed leads if COMM_DEF has values but saved data is empty
+    if(c.leads.some(v=>v>0)&&!S[c.id].leads.some(v=>n(v)>0)){
+      S[c.id].leads=c.leads.map(String);
+    }
+    // Re-seed events if COMM_DEF has values but saved data is empty
+    if(c.events.some(v=>v!=='')&&!S[c.id].events.some(v=>v!=='')){
+      S[c.id].events=c.events.map(String);
+    }
+  });
+}
+
 function applyCommitted() {
   Object.keys(COMMITTED).forEach(cid=>{
     if(!S[cid])return;
@@ -683,6 +705,7 @@ function loadData(){
           inp.value=(v===null||v===undefined)?'':v;
           if(r==='events'){const td=inp.closest('td.ev-td');if(td)td.setAttribute('data-tip',inp.value);}
         });
+        applyDefaults();
         applyCommitted();
         COMM_DEF.forEach(c=>updCalcs(c.id));updTotalTab();
         setSS('ok','&#10003; Loaded from Sheets');
@@ -802,6 +825,7 @@ try{
     COMM_DEF.forEach(c=>{if(_d[c.id])Object.keys(_d[c.id]).forEach(k=>{if(S[c.id]&&Array.isArray(_d[c.id][k]))S[c.id][k]=_d[c.id][k];});});
   }
 }catch(e){}
+applyDefaults();
 applyCommitted();
 renderAll();
 if(GSURL){document.getElementById('cfgUrl').value=GSURL;loadData();}
