@@ -334,7 +334,7 @@ function tcpl(id,m)  {
   const ex=tm(id,m); if(!ex) return ''; return ex/ld;
 }
 function tcplA(id)   { const ld=leadsA(id),g=grand(id); return (ld&&g)?g/ld:''; }
-function rem(id,m)   { return tm(id,m) - chSum(id,m); }
+function rem(id,m)   { return tm(id,m)+n(S[id].rea_listing[m]) - chSum(id,m); }
 function acpl(id,m)  { const ld=n(S[id].leads[m]),cs=chSum(id,m); return (ld&&cs)?cs/ld:''; }
 function acplA(id)   {
   let ld=0,cost=0;
@@ -512,10 +512,10 @@ function buildTotalTable() {
   // Contingency / Remaining = Media Ex GST − Channel Allocated
   r=lbl('CONTINGENCY / REMAINING');
   MONTHS.forEach((_,m)=>{
-    const rv=sumTM(m)-sumCS(m);
+    const rv=sumTM(m)+sumR('rea_listing',m)-sumCS(m);
     r+=`<td class="tc"><div class="cv${rv<0?' neg':''}" id="${id}_rm_${m}">${fmt(rv)}</div></td>`;
   });
-  const remT=Array.from({length:12},(_,m)=>sumTM(m)-sumCS(m)).reduce((s,v)=>s+v,0);
+  const remT=Array.from({length:12},(_,m)=>sumTM(m)+sumR('rea_listing',m)-sumCS(m)).reduce((s,v)=>s+v,0);
   r+=cc(id+'_rm_t',fmt(remT))+blk3;
   rows+=`<tr class="r-rm">${r}</tr>`;
   rows+=SEP;
@@ -624,7 +624,7 @@ function updTotalTab() {
     sv(id+'_al_'+m,fmt(sumTM(m)+sumR('rea_listing',m)));
     sv(id+'_cs_'+m,fmt(sumCS(m)));
     sv(id+'_rl_'+m,fmt(sumR('rea_listing',m)));
-    const rv=sumTM(m)-sumCS(m);
+    const rv=sumTM(m)+sumR('rea_listing',m)-sumCS(m);
     const re=document.getElementById(id+'_rm_'+m);
     if(re){re.textContent=fmt(rv);re.className='cv'+(rv<0?' neg':'');}
     CHANNELS.forEach(ch=>{sv(id+'_'+ch+'_'+m,fmt(sumR(ch,m)));});
@@ -636,7 +636,7 @@ function updTotalTab() {
   sv(id+'_al_t',fmt(gaA));sv(id+'_al_m',fmt(tmaA));sv(id+'_al_l',fmt(laA));sv(id+'_al_g',fmt(gaA));
   sv(id+'_xg_t',fmt(tmaA));
   sv(id+'_rl_t',fmt(laA));
-  sv(id+'_rm_t',fmt(Array.from({length:12},(_,m)=>sumTM(m)-sumCS(m)).reduce((s,v)=>s+v,0)));
+  sv(id+'_rm_t',fmt(Array.from({length:12},(_,m)=>sumTM(m)+sumR('rea_listing',m)-sumCS(m)).reduce((s,v)=>s+v,0)));
 }
 
 function sv(eid,val){ const e=document.getElementById(eid);if(e)e.textContent=val; }
