@@ -7,7 +7,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-:root{--y:#FDB600;--bk:#000;--gr:#595959;--bg:#f5f5f0;--bd:#e2e0d8;--w:#fff;--lw:205px;--mw:78px;--tw:86px}
+:root{--y:#FDB600;--bk:#000;--gr:#595959;--bg:#f5f5f0;--bd:#e2e0d8;--w:#fff;--lw:230px;--mw:78px;--tw:86px}
 body{font-family:'Poppins',sans-serif;background:var(--bg);font-size:11px;color:var(--bk);min-height:100vh}
 /* HEADER */
 .hdr{background:#000;border-bottom:3px solid var(--y);position:sticky;top:0;z-index:100}
@@ -378,6 +378,7 @@ function buildTable(c) {
   const blk3='<td class="tc"></td><td class="tc"></td><td class="tc"></td>';
   const SEP='<tr class="r-sep"><td colspan="17"></td></tr>';
   let rows='';
+  const tma=tmA(id),la=lstA(id),ga=grand(id);
 
   // Events
   let r=lbl('Events/Milestones');
@@ -400,21 +401,25 @@ function buildTable(c) {
   rows+=`<tr class="r-ac">${r}${cc(id+'_ac_t',fmt(acplA(id)))}<td class="tc"></td><td class="tc"></td><td class="tc"></td></tr>`;
   rows+=SEP;
 
-  // Channel rows
+  // Channel rows (REA PP inserted directly after REA channel)
   CHANNELS.forEach(ch=>{
     r=lbl(CH_LBL[ch]);
     MONTHS.forEach((_,m)=>{ r+=inp(ch,m,false); });
     const chT=S[id][ch].reduce((s,v)=>s+n(v),0);
     r+=cc(id+'_'+ch+'_t',fmt(chT))+blk3;
     rows+=`<tr class="r-ch">${r}</tr>`;
+    if(ch==='rea_media'){
+      let rr=lbl('REA PP');
+      MONTHS.forEach((_,m)=>{ rr+=inp('rea_listing',m,false); });
+      rows+=`<tr class="r-rl">${rr}${cc(id+'_rl_t',fmt(la))}<td class="tc"></td><td class="tc"></td><td class="tc"></td></tr>`;
+    }
   });
   rows+=SEP;
 
   // Media Ex GST (editable — values entered ex-GST)
-  const tma=tmA(id),la=lstA(id),ga=grand(id);
   r=lbl('MEDIA EX GST');
   MONTHS.forEach((_,m)=>{ r+=inp('total_media',m,false); });
-  r+=cc(id+'_xg_t',fmt(tma))+cc(id+'_xg_m',fmt(tma),'tc bm')+cc(id+'_xg_l',fmt(la),'tc bl')+cc(id+'_xg_g',fmt(ga),'tc bg');
+  r+=cc(id+'_xg_t',fmt(tma))+blk3;
   rows+=`<tr class="r-tm">${r}</tr>`;
 
   // Channel Allocated (below Media Ex GST)
@@ -423,6 +428,12 @@ function buildTable(c) {
   const csT=Array.from({length:12},(_,m)=>chSum(id,m)).reduce((s,v)=>s+v,0);
   r+=cc(id+'_cs_t',fmt(csT))+blk3;
   rows+=`<tr class="r-cs">${r}</tr>`;
+
+  // Approved Media & Listing Budget = Media Ex GST + REA listing per month
+  r=lbl('APPROVED MEDIA & LISTING BUDGET');
+  MONTHS.forEach((_,m)=>{ r+=cc(id+'_al_'+m,fmt(tm(id,m)+n(S[id].rea_listing[m]))); });
+  r+=cc(id+'_al_t',fmt(ga))+cc(id+'_al_m',fmt(tma),'tc bm')+cc(id+'_al_l',fmt(la),'tc bl')+cc(id+'_al_g',fmt(ga),'tc bg');
+  rows+=`<tr class="r-tm">${r}</tr>`;
   rows+=SEP;
 
   // Contingency / Remaining = Media Ex GST − Channel Allocated
@@ -434,12 +445,6 @@ function buildTable(c) {
   const remT=Array.from({length:12},(_,m)=>rem(id,m)).reduce((s,v)=>s+v,0);
   r+=cc(id+'_rm_t',fmt(remT))+blk3;
   rows+=`<tr class="r-rm">${r}</tr>`;
-  rows+=SEP;
-
-  // REA PP
-  r=lbl('REA PP');
-  MONTHS.forEach((_,m)=>{ r+=inp('rea_listing',m,false); });
-  rows+=`<tr class="r-rl">${r}${cc(id+'_rl_t',fmt(la))}<td class="tc"></td><td class="tc"></td><td class="tc"></td></tr>`;
 
   return `<div class="tw"><table class="sp"><thead><tr>${hdr}</tr></thead><tbody>${rows}</tbody></table></div>`;
 }
@@ -481,20 +486,25 @@ function buildTotalTable() {
   rows+=`<tr class="r-tc">${r}${cc(id+'_tc_t',ldA&&gaA?fmt(gaA/ldA):'')}<td class="tc"></td><td class="tc"></td><td class="tc"></td></tr>`;
   rows+=SEP;
 
-  // Channels
+  // Channels (REA PP inserted after REA channel)
   CHANNELS.forEach(ch=>{
     r=lbl(CH_LBL[ch]);
     MONTHS.forEach((_,m)=>{ r+=cc(id+'_'+ch+'_'+m,fmt(sumR(ch,m))); });
     const chT=COMM_DEF.reduce((s,c)=>s+S[c.id][ch].reduce((a,v)=>a+n(v),0),0);
     r+=cc(id+'_'+ch+'_t',fmt(chT))+blk3;
     rows+=`<tr class="r-ch">${r}</tr>`;
+    if(ch==='rea_media'){
+      let rr=lbl('REA PP');
+      MONTHS.forEach((_,m)=>{ rr+=cc(id+'_rl_'+m,fmt(sumR('rea_listing',m))); });
+      rows+=`<tr class="r-rl">${rr}${cc(id+'_rl_t',fmt(laA))}<td class="tc"></td><td class="tc"></td><td class="tc"></td></tr>`;
+    }
   });
   rows+=SEP;
 
   // Media Ex GST
   r=lbl('MEDIA EX GST');
   MONTHS.forEach((_,m)=>{ r+=cc(id+'_xg_'+m,fmt(sumTM(m))); });
-  r+=cc(id+'_xg_t',fmt(tmaA))+cc(id+'_xg_m',fmt(tmaA),'tc bm')+cc(id+'_xg_l',fmt(laA),'tc bl')+cc(id+'_xg_g',fmt(gaA),'tc bg');
+  r+=cc(id+'_xg_t',fmt(tmaA))+blk3;
   rows+=`<tr class="r-tm">${r}</tr>`;
 
   // Channel Allocated (below Media Ex GST)
@@ -503,6 +513,12 @@ function buildTotalTable() {
   const csTA=Array.from({length:12},(_,m)=>sumCS(m)).reduce((s,v)=>s+v,0);
   r+=cc(id+'_cs_t',fmt(csTA))+blk3;
   rows+=`<tr class="r-cs">${r}</tr>`;
+
+  // Approved Media & Listing Budget
+  r=lbl('APPROVED MEDIA & LISTING BUDGET');
+  MONTHS.forEach((_,m)=>{ r+=cc(id+'_al_'+m,fmt(sumTM(m)+sumR('rea_listing',m))); });
+  r+=cc(id+'_al_t',fmt(gaA))+cc(id+'_al_m',fmt(tmaA),'tc bm')+cc(id+'_al_l',fmt(laA),'tc bl')+cc(id+'_al_g',fmt(gaA),'tc bg');
+  rows+=`<tr class="r-tm">${r}</tr>`;
   rows+=SEP;
 
   // Contingency / Remaining = Media Ex GST − Channel Allocated
@@ -514,12 +530,6 @@ function buildTotalTable() {
   const remT=Array.from({length:12},(_,m)=>sumTM(m)-sumCS(m)).reduce((s,v)=>s+v,0);
   r+=cc(id+'_rm_t',fmt(remT))+blk3;
   rows+=`<tr class="r-rm">${r}</tr>`;
-  rows+=SEP;
-
-  // REA PP
-  r=lbl('REA PP');
-  MONTHS.forEach((_,m)=>{ r+=cc(id+'_rl_'+m,fmt(sumR('rea_listing',m))); });
-  rows+=`<tr class="r-rl">${r}${cc(id+'_rl_t',fmt(laA))}<td class="tc"></td><td class="tc"></td><td class="tc"></td></tr>`;
   rows+=SEP;
 
   // Per-estate breakdown
@@ -589,7 +599,7 @@ function renderAll() {
 function updCalcs(id) {
   for(let m=0;m<12;m++) {
     sv(id+'_cs_'+m, fmt(chSum(id,m)));
-    sv(id+'_xg_'+m, fmt(tm(id,m)));
+    sv(id+'_al_'+m, fmt(tm(id,m)+n(S[id].rea_listing[m])));
     sv(id+'_tc_'+m, fmt(tcpl(id,m)));
     const re=document.getElementById(id+'_rm_'+m);
     if(re){re.textContent=fmt(rem(id,m));re.className='cv'+(rem(id,m)<0?' neg':'');}
@@ -598,7 +608,8 @@ function updCalcs(id) {
   sv(id+'_cs_t',fmt(Array.from({length:12},(_,m)=>chSum(id,m)).reduce((s,v)=>s+v,0)));
   const tma=tmA(id),la=lstA(id),ga=grand(id),ld=leadsA(id);
   const remT=Array.from({length:12},(_,m)=>rem(id,m)).reduce((s,v)=>s+v,0);
-  sv(id+'_xg_t',fmt(tma));sv(id+'_xg_m',fmt(tma));sv(id+'_xg_l',fmt(la));sv(id+'_xg_g',fmt(ga));
+  sv(id+'_xg_t',fmt(tma));
+  sv(id+'_al_t',fmt(ga));sv(id+'_al_m',fmt(tma));sv(id+'_al_l',fmt(la));sv(id+'_al_g',fmt(ga));
   sv(id+'_tc_t',fmt(tcplA(id)));sv(id+'_ld_t',fmtN(ld));
   for(let m=0;m<12;m++) sv(id+'_ac_'+m,fmt(acpl(id,m)));
   sv(id+'_ac_t',fmt(acplA(id)));
@@ -622,6 +633,7 @@ function updTotalTab() {
     const lm=sumR('leads',m),ex=sumTM(m);
     sv(id+'_tc_'+m,lm&&ex?fmt(ex/lm):'');
     sv(id+'_xg_'+m,fmt(sumTM(m)));
+    sv(id+'_al_'+m,fmt(sumTM(m)+sumR('rea_listing',m)));
     sv(id+'_cs_'+m,fmt(sumCS(m)));
     sv(id+'_rl_'+m,fmt(sumR('rea_listing',m)));
     const rv=sumTM(m)-sumCS(m);
@@ -633,7 +645,8 @@ function updTotalTab() {
   const csTA=Array.from({length:12},(_,m)=>sumCS(m)).reduce((s,v)=>s+v,0);
   sv(id+'_cs_t',fmt(csTA));
   sv(id+'_ld_t',fmtN(ldA));sv(id+'_tc_t',ldA&&gaA?fmt(gaA/ldA):'');
-  sv(id+'_xg_t',fmt(tmaA));sv(id+'_xg_m',fmt(tmaA));sv(id+'_xg_l',fmt(laA));sv(id+'_xg_g',fmt(gaA));
+  sv(id+'_xg_t',fmt(tmaA));
+  sv(id+'_al_t',fmt(gaA));sv(id+'_al_m',fmt(tmaA));sv(id+'_al_l',fmt(laA));sv(id+'_al_g',fmt(gaA));
   sv(id+'_rl_t',fmt(laA));
   sv(id+'_rm_t',fmt(Array.from({length:12},(_,m)=>sumTM(m)-sumCS(m)).reduce((s,v)=>s+v,0)));
 }
