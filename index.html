@@ -422,12 +422,6 @@ function buildTable(c) {
   r+=cc(id+'_al_t',fmt(ga))+cc(id+'_al_m',fmt(tma),'tc bm')+cc(id+'_al_l',fmt(la),'tc bl')+cc(id+'_al_g',fmt(ga),'tc bg');
   rows+=`<tr class="r-tm">${r}</tr>`;
 
-  // Media Budget (editable input — enter ex-GST media budget)
-  r=lbl('MEDIA BUDGET');
-  MONTHS.forEach((_,m)=>{ r+=inp('total_media',m,false); });
-  r+=cc(id+'_xg_t',fmt(tma))+blk3;
-  rows+=`<tr class="r-xg">${r}</tr>`;
-
   // Channel Allocated
   r=lbl('CHANNEL ALLOCATED');
   MONTHS.forEach((_,m)=>{ r+=cc(id+'_cs_'+m,fmt(chSum(id,m))); });
@@ -506,12 +500,6 @@ function buildTotalTable() {
   MONTHS.forEach((_,m)=>{ r+=cc(id+'_al_'+m,fmt(sumTM(m)+sumR('rea_listing',m))); });
   r+=cc(id+'_al_t',fmt(gaA))+cc(id+'_al_m',fmt(tmaA),'tc bm')+cc(id+'_al_l',fmt(laA),'tc bl')+cc(id+'_al_g',fmt(gaA),'tc bg');
   rows+=`<tr class="r-tm">${r}</tr>`;
-
-  // Media Budget (editable)
-  r=lbl('MEDIA BUDGET');
-  MONTHS.forEach((_,m)=>{ r+=cc(id+'_xg_'+m,fmt(sumTM(m))); });
-  r+=cc(id+'_xg_t',fmt(tmaA))+blk3;
-  rows+=`<tr class="r-xg">${r}</tr>`;
 
   // Channel Allocated
   r=lbl('CHANNEL ALLOCATED');
