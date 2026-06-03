@@ -558,10 +558,10 @@ function buildSummaryCards(c) {
 
 // ── RENDER ALL ───────────────────────────────────────────────────────
 function renderAll() {
-  const tmaAll=COMM_DEF.reduce((s,c)=>s+tmA(c.id),0);
+  const tmaAll=COMM_DEF.reduce((s,c)=>s+grand(c.id),0);
   let tabs=COMM_DEF.map(c=>{
     const hasBudget=tmA(c.id)>0;
-    const sub=hasBudget?'$'+Math.round(tmA(c.id)/1000).toLocaleString()+'k':'TBC';
+    const sub=hasBudget?'$'+Math.round(grand(c.id)/1000).toLocaleString()+'k':'TBC';
     return `<div class="tab${c.id===cur?' on':''}${hasBudget?'':' tbc-tab'}" data-id="${c.id}" onclick="swTab('${c.id}')">${c.name} (${c.state})<span class="tab-sub">${sub}</span></div>`;
   }).join('');
   tabs+=`<div class="tab ttab${cur===TID?' on':''}" data-id="${TID}" onclick="swTab('${TID}')">&#8721; TOTAL<span class="tab-sub">$${Math.round(tmaAll/1000).toLocaleString()}k</span></div>`;
