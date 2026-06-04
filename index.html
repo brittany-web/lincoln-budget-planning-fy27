@@ -324,7 +324,7 @@ function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;'
 // ── CALC HELPERS ────────────────────────────────────────────────────
 // tm = TOTAL MEDIA (editable budget), chSum = channel allocation sum
 function tm(id,m)    { return n(S[id].total_media[m]); }
-function chSum(id,m) { return CHANNELS.reduce((s,ch)=>s+n(S[id][ch][m]),0); }
+function chSum(id,m) { return CHANNELS.reduce((s,ch)=>s+n(S[id][ch][m]),0)+n(S[id].rea_listing[m]); }
 function tmA(id)     { return S[id].total_media.reduce((s,v)=>s+n(v),0); }
 function lstA(id)    { return S[id].rea_listing.reduce((s,v)=>s+n(v),0); }
 function grand(id)   { return tmA(id)+lstA(id); }
