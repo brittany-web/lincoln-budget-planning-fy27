@@ -63,7 +63,7 @@ table.sp td,table.sp th{border:1px solid var(--bd);padding:0;height:26px;overflo
 .r-xg td{background:#111!important;color:#999!important}.r-xg .lc{background:#111!important;color:#999!important}
 .r-as td,.r-as .lc{background:#fffef5}
 .r-rm td,.r-rm .lc{background:#e8f5e9;font-weight:600}
-.r-rl td,.r-rl .lc{background:#e8f0fe;font-weight:600}
+.r-rl td,.r-rl .lc{background:#fffef5;font-weight:600}
 .bm{background:#e8f4e8!important}.bl{background:#fff8e0!important}.bg{background:#ffe8e8!important;font-weight:700!important}
 .sth.bm{background:#1a4d1a!important}.sth.bl{background:#4d3d00!important}.sth.bg{background:#4d0000!important}
 .sub{background:#333!important;color:var(--y)!important;font-weight:700!important;font-size:9px!important;text-align:center!important;padding:0 4px!important}
@@ -444,7 +444,11 @@ function buildTable(c) {
     rows+=`<tr class="r-ch">${r}</tr>`;
     if(ch==='rea_media'){
       let rr=lbl('REA PP');
-      MONTHS.forEach((_,m)=>{ rr+=inp('rea_listing',m,false); });
+      MONTHS.forEach((_,m)=>{
+        const rv=n(S[id].rea_listing[m]);
+        const dv=rv?esc(fmt(rv)):'';
+        rr+=`<td class="mc"><input class="ci" data-id="${id}" data-r="rea_listing" data-m="${m}" value="${dv}"></td>`;
+      });
       rows+=`<tr class="r-rl">${rr}${cc(id+'_rl_t',fmt(la))}<td class="tc"></td><td class="tc"></td><td class="tc"></td></tr>`;
     }
   });
@@ -705,7 +709,9 @@ document.addEventListener('blur',function(e) {
     const res=evalFml(val,id,mi);
     if(res!==null){t.value=res;t.classList.remove('fml-err');t.classList.add('has-fml');S[id][r][mi]=String(res);updCalcs(id);schedSave();}
     else t.classList.add('fml-err');
-  } else { delete fmlStore[k]; t.classList.remove('fml-err');t.classList.remove('has-fml'); }
+  } else { delete fmlStore[k]; t.classList.remove('fml-err');t.classList.remove('has-fml');
+    if(r==='rea_listing'&&val){const num=n(val);if(num){t.value=fmt(num);S[id][r][mi]=fmt(num);updCalcs(id);schedSave();}}
+  }
 },true);
 document.addEventListener('focus',function(e) {
   const t=e.target;if(!t.dataset||!t.dataset.id||!t.dataset.r)return;
@@ -738,7 +744,9 @@ function loadData(){
         COMM_DEF.forEach(c=>{if(data[c.id])Object.keys(data[c.id]).forEach(k=>{if(S[c.id]&&Array.isArray(data[c.id][k]))S[c.id][k]=data[c.id][k];});});
         document.querySelectorAll('input[data-id]').forEach(inp=>{
           const {id,r,m}=inp.dataset;const v=S[id]?.[r]?.[parseInt(m)];
-          inp.value=(v===null||v===undefined)?'':v;
+          let dv=(v===null||v===undefined)?'':v;
+          if(r==='rea_listing'&&dv){const num=n(dv);if(num)dv=fmt(num);}
+          inp.value=dv;
           if(r==='events'){const td=inp.closest('td.ev-td');if(td)td.setAttribute('data-tip',inp.value);}
         });
         applyDefaults();
