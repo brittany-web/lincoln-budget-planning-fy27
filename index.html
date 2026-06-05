@@ -803,7 +803,7 @@ async function sendChat(){
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({
-        model:'claude-sonnet-4-6',
+        model:'claude-opus-4-5',
         max_tokens:4096,
         system:CHAT_SYSTEM+'\n\nCURRENT BUDGET DATA:\n'+JSON.stringify(buildCtx()),
         tools:[{
@@ -830,6 +830,7 @@ async function sendChat(){
     const text=data.content&&data.content.find(b=>b.type==='text');
     if(tool){
       const {changes,summary}=tool.input;let n=0;
+      if(!Array.isArray(changes)){thinking.remove();chatMsg('err','Claude returned an invalid response — please try again.');document.getElementById('chatSend').disabled=false;return;}
       changes.forEach(ch=>{
         if(S[ch.community]&&S[ch.community][ch.field]!==undefined&&ch.month>=0&&ch.month<12){
           S[ch.community][ch.field][ch.month]=String(Math.round(ch.value));n++;
