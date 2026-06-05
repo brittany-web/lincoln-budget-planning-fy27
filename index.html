@@ -273,9 +273,17 @@ const FY26_DATA = {
 function applyFY26() {
   Object.keys(FY26_DATA).forEach(cid=>{
     if(!S[cid])return;
-    if(!S[cid].fy26_leads[0])S[cid].fy26_leads=[FY26_DATA[cid].leads];
-    if(!S[cid].fy26_cpl[0])  S[cid].fy26_cpl=  [FY26_DATA[cid].cpl];
-    if(!S[cid].fy26_budget[0])S[cid].fy26_budget=[FY26_DATA[cid].budget];
+    const d=FY26_DATA[cid];
+    if(!S[cid].fy26_leads[0]) S[cid].fy26_leads= [d.leads];
+    if(!S[cid].fy26_cpl[0])   S[cid].fy26_cpl=   ['$'+parseInt(d.cpl).toLocaleString()];
+    if(!S[cid].fy26_budget[0]) S[cid].fy26_budget=['$'+parseInt(d.budget).toLocaleString()];
+  });
+  // Sync FY26 inputs in DOM (may have already been rendered before this ran)
+  COMM_DEF.forEach(c=>{
+    ['fy26_leads','fy26_cpl','fy26_budget'].forEach(r=>{
+      const el=document.querySelector(`input[data-id="${c.id}"][data-r="${r}"][data-m="0"]`);
+      if(el)el.value=S[c.id][r][0]||'';
+    });
   });
 }
 
