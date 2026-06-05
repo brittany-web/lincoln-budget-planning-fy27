@@ -63,7 +63,7 @@ table.sp td,table.sp th{border:1px solid var(--bd);padding:0;height:26px;overflo
 .r-xg td{background:#111!important;color:#999!important}.r-xg .lc{background:#111!important;color:#999!important}
 .r-as td,.r-as .lc{background:#fffef5}
 .r-rm td,.r-rm .lc{background:#e8f5e9;font-weight:600}
-.r-rl td,.r-rl .lc{background:#fffef5;font-weight:600}
+.r-rl td,.r-rl .lc{background:#fffef5}
 .bm{background:#e8f4e8!important}.bl{background:#fff8e0!important}.bg{background:#ffe8e8!important;font-weight:700!important}
 .sth.bm{background:#1a4d1a!important}.sth.bl{background:#4d3d00!important}.sth.bg{background:#4d0000!important}
 .sub{background:#333!important;color:var(--y)!important;font-weight:700!important;font-size:9px!important;text-align:center!important;padding:0 4px!important}
@@ -401,11 +401,13 @@ function buildTable(c) {
   MONTHS.forEach(m=>{ hdr+=`<th class="mc sth">${m}</th>`; });
   hdr+=`<th class="tc sth">TOTAL</th><th class="tc sth bm">MEDIA</th><th class="tc sth bl">LISTING</th><th class="tc sth bg">TOTAL</th>`;
 
-  function inp(row,mi,isEv) {
-    const v=esc(S[id][row][mi]||'');
+  function inp(row,mi,isEv,curr) {
+    const raw=S[id][row][mi]||'';
+    const num=curr?n(raw):0;
+    const display=esc(curr&&num?fmt(num):raw);
     return isEv
-      ? `<td class="mc ev-td" data-tip="${v}"><input class="ci ev" data-id="${id}" data-r="${row}" data-m="${mi}" value="${v}"></td>`
-      : `<td class="mc"><input class="ci" data-id="${id}" data-r="${row}" data-m="${mi}" value="${v}"></td>`;
+      ? `<td class="mc ev-td" data-tip="${esc(raw)}"><input class="ci ev" data-id="${id}" data-r="${row}" data-m="${mi}" value="${display}"></td>`
+      : `<td class="mc"><input class="ci" data-id="${id}" data-r="${row}" data-m="${mi}" value="${display}"></td>`;
   }
   function cc(eid,val,cls) { return `<td class="${cls||'tc'}"><div class="cv" id="${eid}">${val}</div></td>`; }
   function lbl(txt) { return `<td class="lc"><div class="cv lv">${txt}</div></td>`; }
@@ -438,17 +440,13 @@ function buildTable(c) {
   // Channel rows (REA PP inserted directly after REA channel)
   CHANNELS.forEach(ch=>{
     r=lbl(CH_LBL[ch]);
-    MONTHS.forEach((_,m)=>{ r+=inp(ch,m,false); });
+    MONTHS.forEach((_,m)=>{ r+=inp(ch,m,false,true); });
     const chT=S[id][ch].reduce((s,v)=>s+n(v),0);
     r+=cc(id+'_'+ch+'_t',fmt(chT))+blk3;
     rows+=`<tr class="r-ch">${r}</tr>`;
     if(ch==='rea_media'){
       let rr=lbl('REA PP');
-      MONTHS.forEach((_,m)=>{
-        const rv=n(S[id].rea_listing[m]);
-        const dv=rv?esc(fmt(rv)):'';
-        rr+=`<td class="mc"><input class="ci" data-id="${id}" data-r="rea_listing" data-m="${m}" value="${dv}"></td>`;
-      });
+      MONTHS.forEach((_,m)=>{ rr+=inp('rea_listing',m,false,true); });
       rows+=`<tr class="r-rl">${rr}${cc(id+'_rl_t',fmt(la))}<td class="tc"></td><td class="tc"></td><td class="tc"></td></tr>`;
     }
   });
@@ -710,7 +708,7 @@ document.addEventListener('blur',function(e) {
     if(res!==null){t.value=res;t.classList.remove('fml-err');t.classList.add('has-fml');S[id][r][mi]=String(res);updCalcs(id);schedSave();}
     else t.classList.add('fml-err');
   } else { delete fmlStore[k]; t.classList.remove('fml-err');t.classList.remove('has-fml');
-    if(r==='rea_listing'&&val){const num=n(val);if(num){t.value=fmt(num);S[id][r][mi]=fmt(num);updCalcs(id);schedSave();}}
+    if(val){const num=n(val);if(num){t.value=fmt(num);S[id][r][mi]=fmt(num);updCalcs(id);schedSave();}}
   }
 },true);
 document.addEventListener('focus',function(e) {
@@ -745,7 +743,7 @@ function loadData(){
         document.querySelectorAll('input[data-id]').forEach(inp=>{
           const {id,r,m}=inp.dataset;const v=S[id]?.[r]?.[parseInt(m)];
           let dv=(v===null||v===undefined)?'':v;
-          if(r==='rea_listing'&&dv){const num=n(dv);if(num)dv=fmt(num);}
+          if(dv&&r!=='events'&&r!=='leads'&&r!=='fy26_leads'&&r!=='fy26_cpl'){const num=n(dv);if(num)dv=fmt(num);}
           inp.value=dv;
           if(r==='events'){const td=inp.closest('td.ev-td');if(td)td.setAttribute('data-tip',inp.value);}
         });
