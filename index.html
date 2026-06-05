@@ -258,6 +258,27 @@ const COMMITTED = {
   }
 };
 
+// ── FY26 ACTUALS (from investment tracking, June projected from target) ──
+const FY26_DATA = {
+  BARANDUDA: {leads:'512', cpl:'633',  budget:'324000'},
+  LLEP:      {leads:'397', cpl:'605',  budget:'240000'},
+  GRIFFITH:  {leads:'283', cpl:'1007', budget:'285000'},
+  HUNTLY:    {leads:'380', cpl:'887',  budget:'337000'},
+  KFLAT:     {leads:'382', cpl:'843',  budget:'322000'},
+  MUDGEE:    {leads:'337', cpl:'985',  budget:'331967'},
+  NB:        {leads:'949', cpl:'385',  budget:'365000'},
+  NR:        {leads:'619', cpl:'598',  budget:'370000'},
+  YEPPOON:   {leads:'581', cpl:'482',  budget:'280000'}
+};
+function applyFY26() {
+  Object.keys(FY26_DATA).forEach(cid=>{
+    if(!S[cid])return;
+    if(!S[cid].fy26_leads[0])S[cid].fy26_leads=[FY26_DATA[cid].leads];
+    if(!S[cid].fy26_cpl[0])  S[cid].fy26_cpl=  [FY26_DATA[cid].cpl];
+    if(!S[cid].fy26_budget[0])S[cid].fy26_budget=[FY26_DATA[cid].budget];
+  });
+}
+
 function applyDefaults() {
   COMM_DEF.forEach(c=>{
     if(!S[c.id])return;
@@ -303,6 +324,7 @@ function initS() {
       actual_cpl:  Array(12).fill(''),
       fy26_leads:  [''],
       fy26_cpl:    [''],
+      fy26_budget: [''],
       rea_listing: c.rea_listing.map(v => v ? String(Math.round(v/1.1)) : ''),
       approved_listing: String(Math.round(c.rea_listing.reduce((s,v)=>s+v,0)/1.1)),
       total_media: c.total_media.map(v => v ? String(Math.round(v/1.1)) : '')
@@ -551,8 +573,9 @@ function buildSummaryCards(c) {
     <div class="sum-card sc-hi"><div class="sc-val" id="${id}_sc_grand">${fmt(approvedGrand)}</div><div class="sc-lbl">Total Approved Budget</div></div>
     <div class="sum-card"><div class="sc-val" id="${id}_sc_leads">${fmtN(ld)}</div><div class="sc-lbl">FY27 Lead Target</div></div>
     <div class="sum-card"><div class="sc-val" id="${id}_sc_cpl">${cpl}</div><div class="sc-lbl">FY27 Target CPL</div></div>
-    <div class="sum-card"><input class="sc-inp" data-id="${id}" data-r="fy26_leads" data-m="0" value="${fy26ld}" placeholder="—"><div class="sc-lbl">FY26 Lead Target</div></div>
-    <div class="sum-card"><input class="sc-inp" data-id="${id}" data-r="fy26_cpl" data-m="0" value="${fy26cpl}" placeholder="—"><div class="sc-lbl">FY26 Target CPL</div></div>
+    <div class="sum-card"><input class="sc-inp" data-id="${id}" data-r="fy26_budget" data-m="0" value="${esc(S[id].fy26_budget[0]||'')}" placeholder="—"><div class="sc-lbl">FY26 Approved Budget</div></div>
+    <div class="sum-card"><input class="sc-inp" data-id="${id}" data-r="fy26_leads" data-m="0" value="${fy26ld}" placeholder="—"><div class="sc-lbl">FY26 Lead Actuals</div></div>
+    <div class="sum-card"><input class="sc-inp" data-id="${id}" data-r="fy26_cpl" data-m="0" value="${fy26cpl}" placeholder="—"><div class="sc-lbl">FY26 CPL Actuals</div></div>
   </div>`;
 }
 
@@ -707,6 +730,7 @@ function loadData(){
           if(r==='events'){const td=inp.closest('td.ev-td');if(td)td.setAttribute('data-tip',inp.value);}
         });
         applyDefaults();
+        applyFY26();
         applyCommitted();
         COMM_DEF.forEach(c=>updCalcs(c.id));updTotalTab();
         setSS('ok','&#10003; Loaded from Sheets');
@@ -827,6 +851,7 @@ try{
   }
 }catch(e){}
 applyDefaults();
+applyFY26();
 applyCommitted();
 renderAll();
 if(GSURL){document.getElementById('cfgUrl').value=GSURL;loadData();}
