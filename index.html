@@ -452,9 +452,9 @@ function buildTable(c) {
   });
   rows+=SEP;
 
-  // Approved Media & Listing Budget (calculated = media + REA listing per month)
+  // Approved Media & Listing Budget (editable — shift budget between months)
   r=lbl('APPROVED MEDIA & LISTING BUDGET');
-  MONTHS.forEach((_,m)=>{ r+=cc(id+'_al_'+m,fmt(tm(id,m)+n(S[id].rea_listing[m]))); });
+  MONTHS.forEach((_,m)=>{ r+=inp('total_media',m,false,true); });
   r+=cc(id+'_al_t',fmt(ga))+cc(id+'_al_m',fmt(tma),'tc bm')+cc(id+'_al_l',fmt(la),'tc bl')+cc(id+'_al_g',fmt(ga),'tc bg');
   rows+=`<tr class="r-tm">${r}</tr>`;
 
