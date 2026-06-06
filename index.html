@@ -358,7 +358,7 @@ function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;'
 // ── CALC HELPERS ────────────────────────────────────────────────────
 // tm = TOTAL MEDIA (editable budget), chSum = channel allocation sum
 function tm(id,m)    { return n(S[id].total_media[m]); }
-function chSum(id,m) { return CHANNELS.reduce((s,ch)=>s+n(S[id][ch][m]),0)+n(S[id].rea_listing[m]); }
+function chSum(id,m) { return CHANNELS.reduce((s,ch)=>s+n(S[id][ch][m]),0); }
 function tmA(id)     { return S[id].total_media.reduce((s,v)=>s+n(v),0); }
 function lstA(id)    { return S[id].rea_listing.reduce((s,v)=>s+n(v),0); }
 function grand(id)   { return tmA(id)+lstA(id); }
@@ -368,7 +368,7 @@ function tcpl(id,m)  {
   const ex=tm(id,m); if(!ex) return ''; return ex/ld;
 }
 function tcplA(id)   { const ld=leadsA(id),g=grand(id); return (ld&&g)?g/ld:''; }
-function rem(id,m)   { return tm(id,m)+n(S[id].rea_listing[m]) - chSum(id,m); }
+function rem(id,m)   { return tm(id,m) - chSum(id,m); }
 function acpl(id,m)  { const ld=n(S[id].leads[m]),cs=chSum(id,m); return (ld&&cs)?cs/ld:''; }
 function acplA(id)   {
   let ld=0,cost=0;
@@ -444,18 +444,13 @@ function buildTable(c) {
     const chT=S[id][ch].reduce((s,v)=>s+n(v),0);
     r+=cc(id+'_'+ch+'_t',fmt(chT))+blk3;
     rows+=`<tr class="r-ch">${r}</tr>`;
-    if(ch==='rea_media'){
-      let rr=lbl('REA PP');
-      MONTHS.forEach((_,m)=>{ rr+=inp('rea_listing',m,false,true); });
-      rows+=`<tr class="r-rl">${rr}${cc(id+'_rl_t',fmt(la))}<td class="tc"></td><td class="tc"></td><td class="tc"></td></tr>`;
-    }
   });
   rows+=SEP;
 
-  // Approved Media & Listing Budget (editable — shift budget between months)
-  r=lbl('APPROVED MEDIA & LISTING BUDGET');
+  // Approved Media Budget (editable — shift budget between months)
+  r=lbl('APPROVED MEDIA BUDGET');
   MONTHS.forEach((_,m)=>{ r+=inp('total_media',m,false,true); });
-  r+=cc(id+'_al_t',fmt(ga))+cc(id+'_al_m',fmt(tma),'tc bm')+cc(id+'_al_l',fmt(la),'tc bl')+cc(id+'_al_g',fmt(ga),'tc bg');
+  r+=cc(id+'_al_t',fmt(tma))+cc(id+'_al_m',fmt(tma),'tc bm')+'<td class="tc"></td><td class="tc"></td>';
   rows+=`<tr class="r-tm">${r}</tr>`;
 
   // Channel Allocated
@@ -475,6 +470,12 @@ function buildTable(c) {
   const remT=Array.from({length:12},(_,m)=>rem(id,m)).reduce((s,v)=>s+v,0);
   r+=cc(id+'_rm_t',fmt(remT))+blk3;
   rows+=`<tr class="r-rm">${r}</tr>`;
+  rows+=SEP;
+
+  // Listings (REA PP — moved to bottom)
+  r=lbl('LISTINGS');
+  MONTHS.forEach((_,m)=>{ r+=inp('rea_listing',m,false,true); });
+  rows+=`<tr class="r-rl">${r}${cc(id+'_rl_t',fmt(la))}<td class="tc"></td><td class="tc"></td><td class="tc"></td></tr>`;
 
   return `<div class="tw"><table class="sp"><thead><tr>${hdr}</tr></thead><tbody>${rows}</tbody></table></div>`;
 }
@@ -523,18 +524,13 @@ function buildTotalTable() {
     const chT=COMM_DEF.reduce((s,c)=>s+S[c.id][ch].reduce((a,v)=>a+n(v),0),0);
     r+=cc(id+'_'+ch+'_t',fmt(chT))+blk3;
     rows+=`<tr class="r-ch">${r}</tr>`;
-    if(ch==='rea_media'){
-      let rr=lbl('REA PP');
-      MONTHS.forEach((_,m)=>{ rr+=cc(id+'_rl_'+m,fmt(sumR('rea_listing',m))); });
-      rows+=`<tr class="r-rl">${rr}${cc(id+'_rl_t',fmt(laA))}<td class="tc"></td><td class="tc"></td><td class="tc"></td></tr>`;
-    }
   });
   rows+=SEP;
 
-  // Approved Media & Listing Budget (calculated)
-  r=lbl('APPROVED MEDIA & LISTING BUDGET');
-  MONTHS.forEach((_,m)=>{ r+=cc(id+'_al_'+m,fmt(sumTM(m)+sumR('rea_listing',m))); });
-  r+=cc(id+'_al_t',fmt(gaA))+cc(id+'_al_m',fmt(tmaA),'tc bm')+cc(id+'_al_l',fmt(laA),'tc bl')+cc(id+'_al_g',fmt(gaA),'tc bg');
+  // Approved Media Budget (read-only in total tab)
+  r=lbl('APPROVED MEDIA BUDGET');
+  MONTHS.forEach((_,m)=>{ r+=cc(id+'_al_'+m,fmt(sumTM(m))); });
+  r+=cc(id+'_al_t',fmt(tmaA))+cc(id+'_al_m',fmt(tmaA),'tc bm')+'<td class="tc"></td><td class="tc"></td>';
   rows+=`<tr class="r-tm">${r}</tr>`;
 
   // Channel Allocated
@@ -548,12 +544,18 @@ function buildTotalTable() {
   // Contingency / Remaining = Media Ex GST − Channel Allocated
   r=lbl('CONTINGENCY / REMAINING');
   MONTHS.forEach((_,m)=>{
-    const rv=sumTM(m)+sumR('rea_listing',m)-sumCS(m);
+    const rv=sumTM(m)-sumCS(m);
     r+=`<td class="tc"><div class="cv${rv<0?' neg':''}" id="${id}_rm_${m}">${fmt(rv)}</div></td>`;
   });
-  const remT=Array.from({length:12},(_,m)=>sumTM(m)+sumR('rea_listing',m)-sumCS(m)).reduce((s,v)=>s+v,0);
+  const remT=Array.from({length:12},(_,m)=>sumTM(m)-sumCS(m)).reduce((s,v)=>s+v,0);
   r+=cc(id+'_rm_t',fmt(remT))+blk3;
   rows+=`<tr class="r-rm">${r}</tr>`;
+  rows+=SEP;
+
+  // Listings
+  r=lbl('LISTINGS');
+  MONTHS.forEach((_,m)=>{ r+=cc(id+'_rl_'+m,fmt(sumR('rea_listing',m))); });
+  rows+=`<tr class="r-rl">${r}${cc(id+'_rl_t',fmt(laA))}<td class="tc"></td><td class="tc"></td><td class="tc"></td></tr>`;
   rows+=SEP;
 
   // Per-estate breakdown
@@ -633,7 +635,7 @@ function updCalcs(id) {
   sv(id+'_cs_t',fmt(Array.from({length:12},(_,m)=>chSum(id,m)).reduce((s,v)=>s+v,0)));
   const tma=tmA(id),la=lstA(id),ga=grand(id),ld=leadsA(id);
   const remT=Array.from({length:12},(_,m)=>rem(id,m)).reduce((s,v)=>s+v,0);
-  sv(id+'_al_t',fmt(ga));sv(id+'_al_m',fmt(tma));sv(id+'_al_l',fmt(la));sv(id+'_al_g',fmt(ga));
+  sv(id+'_al_t',fmt(tma));sv(id+'_al_m',fmt(tma));
   sv(id+'_xg_t',fmt(tma));
   sv(id+'_tc_t',fmt(tcplA(id)));sv(id+'_ld_t',fmtN(ld));
   for(let m=0;m<12;m++) sv(id+'_ac_'+m,fmt(acpl(id,m)));
@@ -658,10 +660,10 @@ function updTotalTab() {
     const lm=sumR('leads',m),ex=sumTM(m);
     sv(id+'_tc_'+m,lm&&ex?fmt(ex/lm):'');
     sv(id+'_xg_'+m,fmt(sumTM(m)));
-    sv(id+'_al_'+m,fmt(sumTM(m)+sumR('rea_listing',m)));
+    sv(id+'_al_'+m,fmt(sumTM(m)));
     sv(id+'_cs_'+m,fmt(sumCS(m)));
     sv(id+'_rl_'+m,fmt(sumR('rea_listing',m)));
-    const rv=sumTM(m)+sumR('rea_listing',m)-sumCS(m);
+    const rv=sumTM(m)-sumCS(m);
     const re=document.getElementById(id+'_rm_'+m);
     if(re){re.textContent=fmt(rv);re.className='cv'+(rv<0?' neg':'');}
     CHANNELS.forEach(ch=>{sv(id+'_'+ch+'_'+m,fmt(sumR(ch,m)));});
@@ -670,10 +672,10 @@ function updTotalTab() {
   const csTA=Array.from({length:12},(_,m)=>sumCS(m)).reduce((s,v)=>s+v,0);
   sv(id+'_cs_t',fmt(csTA));
   sv(id+'_ld_t',fmtN(ldA));sv(id+'_tc_t',ldA&&gaA?fmt(gaA/ldA):'');
-  sv(id+'_al_t',fmt(gaA));sv(id+'_al_m',fmt(tmaA));sv(id+'_al_l',fmt(laA));sv(id+'_al_g',fmt(gaA));
+  sv(id+'_al_t',fmt(tmaA));sv(id+'_al_m',fmt(tmaA));
   sv(id+'_xg_t',fmt(tmaA));
   sv(id+'_rl_t',fmt(laA));
-  sv(id+'_rm_t',fmt(Array.from({length:12},(_,m)=>sumTM(m)+sumR('rea_listing',m)-sumCS(m)).reduce((s,v)=>s+v,0)));
+  sv(id+'_rm_t',fmt(Array.from({length:12},(_,m)=>sumTM(m)-sumCS(m)).reduce((s,v)=>s+v,0)));
 }
 
 function sv(eid,val){ const e=document.getElementById(eid);if(e)e.textContent=val; }
