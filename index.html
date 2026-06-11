@@ -811,7 +811,7 @@ async function sendChat(){
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({
         model:'claude-opus-4-5',
-        max_tokens:4096,
+        max_tokens:8192,
         system:CHAT_SYSTEM+'\n\nCURRENT BUDGET DATA:\n'+JSON.stringify(buildCtx()),
         tools:[{
           name:'apply_changes',
@@ -826,7 +826,7 @@ async function sendChat(){
             summary:{type:'string',description:'Short plain-English summary of what was changed'}
           }}
         }],
-        tool_choice:{type:'auto'},
+        tool_choice:{type:'any'},
         messages:[{role:'user',content:msg}]
       })
     });
@@ -837,7 +837,7 @@ async function sendChat(){
     const text=data.content&&data.content.find(b=>b.type==='text');
     if(tool){
       const {changes,summary}=tool.input;let cnt=0;
-      if(!Array.isArray(changes)){thinking.remove();chatMsg('err','Claude returned an invalid response — please try again.');document.getElementById('chatSend').disabled=false;return;}
+      if(!Array.isArray(changes)){chatMsg('err','Invalid response — changes missing. Raw: '+JSON.stringify(tool.input).slice(0,200));document.getElementById('chatSend').disabled=false;return;}
       changes.forEach(ch=>{
         if(S[ch.community]&&S[ch.community][ch.field]!==undefined&&ch.month>=0&&ch.month<12){
           const fv=fmt(Math.round(ch.value));
