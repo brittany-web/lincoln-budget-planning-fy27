@@ -357,7 +357,9 @@ function applyCommitted() {
     if(!S[cid])return;
     Object.keys(COMMITTED[cid]).forEach(ch=>{
       COMMITTED[cid][ch].forEach((val,m)=>{
-        if(val&&S[cid][ch]&&S[cid][ch][m]==='')S[cid][ch][m]=String(val);
+        // Only fill if empty AND the user hasn't explicitly cleared this cell
+        if(val&&S[cid][ch]&&S[cid][ch][m]===''&&!(S[cid]._clr&&S[cid]._clr.includes(ch+'_'+m)))
+          S[cid][ch][m]=String(val);
       });
     });
   });
@@ -378,7 +380,8 @@ function initS() {
       fy26_budget: [''],
       rea_listing: c.rea_listing.map(v => v ? String(Math.round(v/1.1)) : ''),
       approved_listing: String(Math.round(c.rea_listing.reduce((s,v)=>s+v,0)/1.1)),
-      total_media: c.total_media.map(v => v ? String(Math.round(v/1.1)) : '')
+      total_media: c.total_media.map(v => v ? String(Math.round(v/1.1)) : ''),
+      _clr: []
     };
     CHANNELS.forEach(ch => { S[c.id][ch] = Array(12).fill(''); });
   });
@@ -733,6 +736,13 @@ document.addEventListener('input',function(e) {
   const {id,r,m}=t.dataset;const mi=parseInt(m);
   S[id][r][mi]=t.value;
   if(r==='events'){ const td=t.closest('td.ev-td');if(td)td.setAttribute('data-tip',t.value); }
+  // Track cells the user explicitly clears so applyCommitted won't refill them
+  if(r!=='events'&&r!=='leads'&&r!=='fy26_leads'&&r!=='fy26_cpl'&&r!=='fy26_budget'){
+    if(!S[id]._clr)S[id]._clr=[];
+    const ck=r+'_'+mi;
+    if(t.value===''){if(!S[id]._clr.includes(ck))S[id]._clr.push(ck);}
+    else{const i=S[id]._clr.indexOf(ck);if(i>=0)S[id]._clr.splice(i,1);}
+  }
   updCalcs(id);schedSave();
 });
 
