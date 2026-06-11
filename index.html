@@ -326,24 +326,30 @@ function clearChannel(ch) {
   COMM_DEF.forEach(c=>{ if(S[c.id])S[c.id][ch]=Array(12).fill(''); });
 }
 
+// Hash of COMM_DEF total_media — changes when briefs are updated via code deploy
+const _DEFHASH=COMM_DEF.map(c=>c.id+':'+c.total_media.reduce((s,v)=>s+v,0)).join('|');
+
 function applyDefaults() {
+  // Re-seed total_media only when COMM_DEF has been updated since last save,
+  // OR when a community has no budget yet (all empty). User edits otherwise persist.
+  const hashChanged=localStorage.getItem('lp_defhash')!==_DEFHASH;
   COMM_DEF.forEach(c=>{
     if(!S[c.id])return;
     const defMedia=c.total_media.map(v=>v?Math.round(v/1.1):0);
     const defList=c.rea_listing.map(v=>v?Math.round(v/1.1):0);
-    // Always re-seed from COMM_DEF (brief values — not user-entered)
     if(defMedia.some(v=>v>0)){
-      S[c.id].total_media=defMedia.map(v=>v?String(v):'');
+      // Re-seed total_media only if: first load (all empty) OR COMM_DEF totals changed
+      if(hashChanged||S[c.id].total_media.every(v=>!v)){
+        S[c.id].total_media=defMedia.map(v=>v?String(v):'');
+      }
+      // Always re-seed listing fee — it's a fixed rate, never user-entered
       S[c.id].rea_listing=defList.map(v=>v?String(v):'');
       S[c.id].approved_listing=String(defList.reduce((s,v)=>s+v,0));
     }
-    if(c.leads.some(v=>v>0)){
-      S[c.id].leads=c.leads.map(String);
-    }
-    if(c.events.some(v=>v!=='')){
-      S[c.id].events=c.events.map(String);
-    }
+    if(c.leads.some(v=>v>0)){ S[c.id].leads=c.leads.map(String); }
+    if(c.events.some(v=>v!=='')){ S[c.id].events=c.events.map(String); }
   });
+  try{localStorage.setItem('lp_defhash',_DEFHASH);}catch(e){}
 }
 
 function applyCommitted() {
@@ -926,6 +932,9 @@ try{
   if(_ls){
     const _d=JSON.parse(_ls);
     COMM_DEF.forEach(c=>{if(_d[c.id])Object.keys(_d[c.id]).forEach(k=>{if(S[c.id]&&Array.isArray(_d[c.id][k]))S[c.id][k]=_d[c.id][k];});});
+    // Bootstrap: if local data exists but has no timestamp (pre-fix saves),
+    // give it ts=1 so it wins over old Sheets blobs that also have ts=0
+    if(!localStorage.getItem('lp_ts')){try{localStorage.setItem('lp_ts','1');}catch(e){}}
   }
 }catch(e){}
 applyDefaults();
