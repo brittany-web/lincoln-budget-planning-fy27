@@ -755,16 +755,34 @@ document.addEventListener('focus',function(e) {
 // ── PERSISTENCE ──────────────────────────────────────────────────────
 function setSS(cls,msg){const e=document.getElementById('ss');e.className=cls;e.innerHTML=msg;}
 function schedSave(){
-  try{localStorage.setItem('lp_data',JSON.stringify(S));}catch(e){}
+  const ts=Date.now();
+  try{localStorage.setItem('lp_data',JSON.stringify(S));localStorage.setItem('lp_ts',String(ts));}catch(e){}
   setSS('ok','&#10003; Saved locally');
-  if(GSURL){setSS('wn','&#9679; Syncing…');if(tid)clearTimeout(tid);tid=setTimeout(doSave,2500);}
+  if(GSURL){setSS('wn','&#9679; Syncing…');if(tid)clearTimeout(tid);tid=setTimeout(()=>doSave(ts),2500);}
 }
-function manualSave(){if(tid)clearTimeout(tid);doSave();}
-async function doSave(){
+function manualSave(){if(tid)clearTimeout(tid);doSave(Date.now());}
+async function doSave(ts){
   if(!GSURL){setSS('wn','&#9889; Configure Google Sheets URL');return;}
   setSS('wn','<span class="spn"></span>Saving…');
-  try{await fetch(GSURL,{method:'POST',mode:'no-cors',body:JSON.stringify(S)});setSS('ok','&#10003; Saved '+new Date().toLocaleTimeString());}
+  const payload=Object.assign({},S,{_ts:ts||Date.now()});
+  try{
+    await fetch(GSURL,{method:'POST',mode:'no-cors',body:JSON.stringify(payload)});
+    try{localStorage.setItem('lp_ts',String(payload._ts));}catch(e){}
+    setSS('ok','&#10003; Saved '+new Date().toLocaleTimeString());
+  }
   catch(e){setSS('er','&#10007; Save failed');}
+}
+function applySheetData(data){
+  COMM_DEF.forEach(c=>{if(data[c.id])Object.keys(data[c.id]).forEach(k=>{if(S[c.id]&&Array.isArray(data[c.id][k]))S[c.id][k]=data[c.id][k];});});
+  applyDefaults();applyFY26();applyCommitted();
+  document.querySelectorAll('input[data-id]').forEach(inp=>{
+    const {id,r,m}=inp.dataset;const v=S[id]?.[r]?.[parseInt(m)];
+    let dv=(v===null||v===undefined)?'':v;
+    if(dv&&r!=='events'&&r!=='leads'&&r!=='fy26_leads'&&r!=='fy26_cpl'){const num=n(dv);if(num)dv=fmt(num);}
+    inp.value=dv;
+    if(r==='events'){const td=inp.closest('td.ev-td');if(td)td.setAttribute('data-tip',inp.value);}
+  });
+  COMM_DEF.forEach(c=>updCalcs(c.id));updTotalTab();
 }
 function loadData(){
   if(!GSURL){setSS('wn','&#9889; No URL set');return;}
@@ -774,22 +792,21 @@ function loadData(){
     try{
       delete window[cb];if(sc.parentNode)sc.parentNode.removeChild(sc);
       if(data&&typeof data==='object'&&Object.keys(data).length>0){
-        COMM_DEF.forEach(c=>{if(data[c.id])Object.keys(data[c.id]).forEach(k=>{if(S[c.id]&&Array.isArray(data[c.id][k]))S[c.id][k]=data[c.id][k];});});
-        applyDefaults();
-        applyFY26();
-        applyCommitted();
-
-        document.querySelectorAll('input[data-id]').forEach(inp=>{
-          const {id,r,m}=inp.dataset;const v=S[id]?.[r]?.[parseInt(m)];
-          let dv=(v===null||v===undefined)?'':v;
-          if(dv&&r!=='events'&&r!=='leads'&&r!=='fy26_leads'&&r!=='fy26_cpl'){const num=n(dv);if(num)dv=fmt(num);}
-          inp.value=dv;
-          if(r==='events'){const td=inp.closest('td.ev-td');if(td)td.setAttribute('data-tip',inp.value);}
-        });
-        COMM_DEF.forEach(c=>updCalcs(c.id));updTotalTab();
-        setSS('ok','&#10003; Loaded from Sheets');
+        const sheetsTs=parseInt(data._ts||0);
+        const localTs=parseInt(localStorage.getItem('lp_ts')||0);
+        if(sheetsTs>=localTs){
+          // Sheets data is at least as fresh as local — use it
+          applySheetData(data);
+          try{localStorage.setItem('lp_ts',String(sheetsTs));}catch(e){}
+          setSS('ok','&#10003; Loaded from Sheets');
+        }else{
+          // Local save is newer — keep local data, just re-apply and update display
+          applyDefaults();applyFY26();applyCommitted();
+          COMM_DEF.forEach(c=>updCalcs(c.id));updTotalTab();
+          setSS('ok','&#10003; Local data is current');
+        }
       }else setSS('wn','&#9712; No saved data');
-    }catch(err){setSS('er','&#10007; Load error');}
+    }catch(err){setSS('er','&#10007; Load error: '+err.message);}
   };
   sc.src=GSURL+'?cb='+cb;sc.onerror=()=>{setSS('er','&#10007; Load failed');};
   document.head.appendChild(sc);
