@@ -640,9 +640,9 @@ function updCalcs(id) {
   for(let m=0;m<12;m++) sv(id+'_ac_'+m,fmt(acpl(id,m)));
   sv(id+'_ac_t',fmt(acplA(id)));
   sv(id+'_rm_t',fmt(remT));sv(id+'_rl_t',fmt(la));
-  const apl=n(S[id].approved_listing),ag=tma+apl;
-  sv(id+'_sc_media',fmt(tma));sv(id+'_sc_grand',fmt(ag));
-  sv(id+'_sc_leads',fmtN(ld));sv(id+'_sc_cpl',ld&&ag?fmt(ag/ld):'—');
+  // Re-render summary cards entirely to avoid stale DOM state
+  const c=COMM_DEF.find(x=>x.id===id);
+  if(c){const sc=document.querySelector('#s_'+id+' .sum-cards');if(sc)sc.outerHTML=buildSummaryCards(c);}
   updTotalTab();
 }
 
