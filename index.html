@@ -742,6 +742,10 @@ function loadData(){
       delete window[cb];if(sc.parentNode)sc.parentNode.removeChild(sc);
       if(data&&typeof data==='object'&&Object.keys(data).length>0){
         COMM_DEF.forEach(c=>{if(data[c.id])Object.keys(data[c.id]).forEach(k=>{if(S[c.id]&&Array.isArray(data[c.id][k]))S[c.id][k]=data[c.id][k];});});
+        applyDefaults();
+        applyFY26();
+        applyCommitted();
+        clearChannel('display_native');
         document.querySelectorAll('input[data-id]').forEach(inp=>{
           const {id,r,m}=inp.dataset;const v=S[id]?.[r]?.[parseInt(m)];
           let dv=(v===null||v===undefined)?'':v;
@@ -749,10 +753,6 @@ function loadData(){
           inp.value=dv;
           if(r==='events'){const td=inp.closest('td.ev-td');if(td)td.setAttribute('data-tip',inp.value);}
         });
-        applyDefaults();
-        applyFY26();
-        applyCommitted();
-        clearChannel('display_native');
         COMM_DEF.forEach(c=>updCalcs(c.id));updTotalTab();
         setSS('ok','&#10003; Loaded from Sheets');
       }else setSS('wn','&#9712; No saved data');
@@ -841,12 +841,18 @@ async function sendChat(){
       if(!Array.isArray(changes)){thinking.remove();chatMsg('err','Claude returned an invalid response — please try again.');document.getElementById('chatSend').disabled=false;return;}
       changes.forEach(ch=>{
         if(S[ch.community]&&S[ch.community][ch.field]!==undefined&&ch.month>=0&&ch.month<12){
-          S[ch.community][ch.field][ch.month]=String(Math.round(ch.value));n++;
+          const fv=fmt(Math.round(ch.value));
+          S[ch.community][ch.field][ch.month]=fv||String(Math.round(ch.value));n++;
         }
       });
       document.querySelectorAll('input[data-id]').forEach(el=>{
         const v=S[el.dataset.id]?.[el.dataset.r]?.[parseInt(el.dataset.m)];
-        if(v!==undefined)el.value=v;
+        if(v!==undefined){
+          const r=el.dataset.r;
+          if(r!=='events'&&r!=='leads'&&r!=='fy26_leads'&&r!=='fy26_cpl'){
+            const num=n(v);el.value=num?fmt(num):v;
+          } else {el.value=v;}
+        }
       });
       COMM_DEF.forEach(c=>updCalcs(c.id));updTotalTab();schedSave();
       chatMsg('ai',`<strong>Done.</strong> ${esc(summary)}<br><span style="color:#555;font-size:9px">${n} cell${n!==1?'s':''} updated</span>`);
