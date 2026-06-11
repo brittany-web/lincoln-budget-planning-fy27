@@ -235,7 +235,8 @@ const COMMITTED = {
     radio:    [5000,5000,5000,0,0,0,0,0,0,0,0,0]
   },
   HUNTLY: {
-    rea_media:[1426,1426,1426,1426,1426,1426,1426,1426,1426,1426,1426,0]
+    rea_media:      [1426,1426,1426,1426,1426,1426,1426,1426,1426,1426,1426,0],
+    display_native: [0,259,329,445,310,196,262,175,175,175,148,148]
   },
   KFLAT: {
     rea_media:[1764,1764,0,0,0,0,0,0,0,0,0,0],
@@ -744,7 +745,7 @@ function loadData(){
         applyDefaults();
         applyFY26();
         applyCommitted();
-        clearChannel('display_native');
+
         document.querySelectorAll('input[data-id]').forEach(inp=>{
           const {id,r,m}=inp.dataset;const v=S[id]?.[r]?.[parseInt(m)];
           let dv=(v===null||v===undefined)?'':v;
@@ -880,7 +881,6 @@ try{
 applyDefaults();
 applyFY26();
 applyCommitted();
-clearChannel('display_native');
 renderAll();
 if(GSURL){document.getElementById('cfgUrl').value=GSURL;loadData();}
 else setSS('ok','&#10003; Data saved locally');
