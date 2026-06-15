@@ -334,6 +334,11 @@ function clearChannel(ch) {
 // Hash of COMM_DEF total_media — changes when briefs are updated via code deploy
 const _DEFHASH=COMM_DEF.map(c=>c.id+':'+c.total_media.reduce((s,v)=>s+v,0)).join('|');
 
+// Hash of COMMITTED — computed once at load time so force-apply applies consistently
+// across ALL applyCommitted() calls this session (incl. the one inside applySheetData)
+const _COMMHASH=Object.entries(COMMITTED).map(([cid,chs])=>cid+':'+Object.entries(chs).map(([k,v])=>k+'='+v.join(',')).join(';')).join('|');
+const _commHashChanged=localStorage.getItem('lp_commhash')!==_COMMHASH;
+
 function applyDefaults() {
   // Re-seed total_media only when COMM_DEF has been updated since last save,
   // OR when a community has no budget yet (all empty). User edits otherwise persist.
@@ -362,12 +367,17 @@ function applyCommitted() {
     if(!S[cid])return;
     Object.keys(COMMITTED[cid]).forEach(ch=>{
       COMMITTED[cid][ch].forEach((val,m)=>{
-        // Only fill if empty AND the user hasn't explicitly cleared this cell
-        if(val&&S[cid][ch]&&S[cid][ch][m]===''&&!(S[cid]._clr&&S[cid]._clr.includes(ch+'_'+m)))
+        if(!val)return; // 0 = no allocation, skip
+        const isCleared=S[cid]._clr&&S[cid]._clr.includes(ch+'_'+m);
+        if(isCleared)return;
+        // Fill if empty, OR force-apply if COMMITTED has changed since last session
+        // (_commHashChanged is fixed for the whole session so Sheets reload also gets updated)
+        if(S[cid][ch]&&(S[cid][ch][m]===''||_commHashChanged))
           S[cid][ch][m]=String(val);
       });
     });
   });
+  try{localStorage.setItem('lp_commhash',_COMMHASH);}catch(e){}
 }
 
 let S = {}, GSURL = localStorage.getItem('sgs')||'', tid=null, cur=COMM_DEF[0].id;
